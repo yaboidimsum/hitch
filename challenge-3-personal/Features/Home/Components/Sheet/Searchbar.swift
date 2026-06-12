@@ -8,29 +8,38 @@
 import SwiftUI
 
 struct Searchbar: View {
+    @Binding var selectedDetent: PresentationDetent
     
     var body: some View {
-        HStack{
-            HStack{
-                Circle()
-                    .stroke(.orange, lineWidth: 4)
-                    .frame(width: 16, height: 16)
-                    
-                TextField("Search for destination", text: .constant(""))
-                    .foregroundStyle(.mutedSlate).font(.caption)
-                    .fontWeight(.medium)
+        HStack {
+            HStack {
+                HStack {
+                    Circle()
+                        .stroke(.orange, lineWidth: 4)
+                        .frame(width: 16, height: 16)
+                        
+                    TextField("Search for destination", text: .constant(""))
+                        .foregroundStyle(.secondary)
+                        .font(.caption)
+                        .fontWeight(.medium)
+                }
+                Image(systemName: "magnifyingglass")
+                    .foregroundStyle(.primary)
+                    .padding(.trailing, 10)
+                    .font(.body)
             }
-            Image(systemName: "magnifyingglass")
-                .foregroundColor(.black)
-                .padding(.trailing, 10)
-                .font(.body)
-            
-        }.padding(12).background(.searchbarBg.opacity(0.30)).clipShape(
-            .rect(cornerRadius: 999)
-        )
+            .padding(12)
+            .background(.gray.opacity(0.12))
+            .clipShape(.rect(cornerRadius: 999))
+        }
+        .padding(16)
+        .contentShape(.rect)
+        .onTapGesture {
+            selectedDetent = .medium
+        }
     }
 }
 
-#Preview{
-    Searchbar()
+#Preview {
+    Searchbar(selectedDetent: .constant(.height(70)))
 }

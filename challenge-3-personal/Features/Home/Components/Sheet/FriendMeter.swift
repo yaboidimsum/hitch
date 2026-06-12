@@ -2,34 +2,27 @@
 //  FriendMeter.swift
 //  challenge-3-personal
 //
-//  Created by Dimas Prihady Setyawan on 12/06/26.
-//
 
 import SwiftUI
 
-struct FriendMeter: View{
-    var body: some View{
-        VStack(spacing: 8){
-            Image(systemName: "person.fill")
-                .resizable()
-                .scaledToFill()
-                .frame(width: 80, height: 80)
-                .clipShape(.circle)
-            VStack(spacing: 4){
-                Text("Contact's Name")
-                    .foregroundStyle(.greenBrand).font(.caption).fontWeight(.medium)
-                Text("25m")
-                    .foregroundStyle(.greenBrand)
-                    .font(.caption2)
-                    .fontWeight(.medium)
+struct FriendMeter: View {
+    var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            Text("Nearby Friends")
+                .font(.headline)
+                .foregroundStyle(.greenBrand).fontWeight(.semibold)
+
+            HStack(spacing: 16) {
+                FriendItem(name: "John Doe", distance: "25m", imageName: "person.fill")
+                FriendItem(name: "Jane Doe", distance: "1.2km", imageName: "person.fill")
+                FriendItem(name: "Mike", distance: "1.3km", imageName: "person.fill")
+                FriendItem(name: "Sarah", distance: "1.3km", imageName: "person.fill")
             }
-           
         }
-        
-        
+        .padding(.horizontal,16)
     }
 }
 
-#Preview{
+#Preview {
     FriendMeter()
 }

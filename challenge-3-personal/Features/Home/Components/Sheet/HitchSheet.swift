@@ -6,11 +6,22 @@
 import SwiftUI
 
 struct HitchSheet: View {
+    @Binding var selectedDetent: PresentationDetent
+    
     var body: some View {
-        EmptyView()
+        VStack(spacing: 0) {
+            Searchbar(selectedDetent: $selectedDetent)
+            
+            ScrollView {
+                VStack(spacing: 32) {
+                    FriendMeter()
+                    RecentCard()
+                }
+            }
+        }
     }
 }
 
 #Preview {
-    HitchSheet()
+    HitchSheet(selectedDetent: .constant(.height(70)))
 }

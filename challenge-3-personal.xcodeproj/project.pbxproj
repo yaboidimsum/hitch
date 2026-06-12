@@ -11,8 +11,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		7D8C0CF32FDABCA100F52615 /* challenge-3-personal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; name = "challenge-3-personal.app"; path = "/Users/dimasps32/Developer/challenge-apple-dev/challenge-3/challenge-3-personal/build/Debug-iphoneos/challenge-3-personal.app"; sourceTree = "<absolute>"; };
 		7D8C0D0F2FDBA6CD00F52615 /* agents.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = agents.md; sourceTree = "<group>"; };
+		7D8C0D342FDBC10E00F52615 /* challenge-3-personal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "challenge-3-personal.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -39,6 +39,7 @@
 			children = (
 				7D8C0CF52FDABCA100F52615 /* challenge-3-personal */,
 				7D8C0D0F2FDBA6CD00F52615 /* agents.md */,
+				7D8C0D342FDBC10E00F52615 /* challenge-3-personal.app */,
 			);
 			sourceTree = "<group>";
 		};
@@ -64,7 +65,7 @@
 			packageProductDependencies = (
 			);
 			productName = "challenge-3-personal";
-			productReference = 7D8C0CF32FDABCA100F52615 /* challenge-3-personal.app */;
+			productReference = 7D8C0D342FDBC10E00F52615 /* challenge-3-personal.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */

@@ -7,6 +7,9 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var greeting = Greeting(message: "Hello, world!", recipient: "world")
+    @State private var showHitchSheet = true
+    @State private var selectedDetent: PresentationDetent = .height(70)
+
     var body: some View {
         NavigationStack {
             ZStack(alignment: .topLeading) {
@@ -23,12 +26,9 @@ struct ContentView: View {
                 }
                 .padding()
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
-                
-                
+
                 WeatherActivity()
                     .padding(.top, -52)
-                
-                
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -39,7 +39,17 @@ struct ContentView: View {
                     }
                 }
             }
-        }.padding(.horizontal,16).padding(.top, 0)
+            .padding(.horizontal, 16)
+            .sheet(isPresented: $showHitchSheet) {
+                HitchSheet(selectedDetent: $selectedDetent)
+                    .presentationDetents(
+                        [.height(70), .medium],
+                        selection: $selectedDetent
+                    )
+                    .interactiveDismissDisabled()
+                    .presentationBackgroundInteraction(.enabled)
+            }
+        }
     }
 }
 
