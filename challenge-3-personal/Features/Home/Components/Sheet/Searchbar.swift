@@ -19,12 +19,12 @@ struct Searchbar: View {
                         .frame(width: 16, height: 16)
                         
                     TextField("Search for destination", text: .constant(""))
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(.ink)
                         .font(.caption)
                         .fontWeight(.medium)
                 }
                 Image(systemName: "magnifyingglass")
-                    .foregroundStyle(.primary)
+                    .foregroundStyle(.ink)
                     .padding(.trailing, 10)
                     .font(.body)
             }

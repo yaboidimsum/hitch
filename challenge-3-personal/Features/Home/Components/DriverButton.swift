@@ -7,7 +7,12 @@ import SwiftUI
 
 struct DriverButton: View {
     var body: some View {
-        EmptyView()
+        Button("Driver", systemImage: "moped", action: {})
+            .labelStyle(.iconOnly).font(.title3)
+            .foregroundStyle(.greenBrand)
+            .frame(width: 44, height: 44)
+            .clipShape(.circle)
+            .glassEffect()
     }
 }
 
