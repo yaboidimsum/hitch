@@ -6,9 +6,12 @@
 import SwiftUI
 
 struct DriverButton: View {
+    let action: () -> Void
+    
     var body: some View {
-        Button("Driver", systemImage: "moped", action: {})
-            .labelStyle(.iconOnly).font(.title3)
+        Button("Driver", systemImage: "moped", action: action)
+            .labelStyle(.iconOnly)
+            .font(.title3)
             .foregroundStyle(.greenBrand)
             .frame(width: 44, height: 44)
             .clipShape(.circle)
@@ -17,5 +20,5 @@ struct DriverButton: View {
 }
 
 #Preview {
-    DriverButton()
+    DriverButton(action: {})
 }

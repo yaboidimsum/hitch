@@ -25,18 +25,3 @@ enum RideStatus: String {
         }
     }
 }
-
-/// Represents how a monetary amount should be displayed.
-enum AmountSign {
-    case positive
-    case negative
-    case neutral
-    
-    var prefix: String {
-        switch self {
-        case .positive: "+"
-        case .negative: "-"
-        case .neutral: ""
-        }
-    }
-}

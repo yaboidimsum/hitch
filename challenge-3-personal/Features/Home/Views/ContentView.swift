@@ -6,12 +6,18 @@
 import SwiftUI
 import MapKit
 
+enum SheetContent {
+    case hitch
+    case request
+}
+
 struct ContentView: View {
     @State private var greeting = Greeting(message: "Hello, world!", recipient: "world")
     @State private var showHitchSheet = true
     @State private var selectedDetent: PresentationDetent = .height(70)
     @State private var model = MapModel()
     @State private var path = NavigationPath()
+    @State private var sheetContent: SheetContent = .hitch
     
     private var showHitchSheetBinding: Binding<Bool> {
         Binding(
@@ -19,9 +25,6 @@ struct ContentView: View {
             set: { showHitchSheet = $0 }
         )
     }
-    
-    
-    
     
     var body: some View {
         NavigationStack(path: $path) {
@@ -44,8 +47,13 @@ struct ContentView: View {
                 WeatherActivity()
                     .padding(.top, -52)
                     .padding(.leading, 16)
-                DriverButton() .padding(.top, 80)
-                    .padding(.leading, 342)
+                DriverButton {
+                    withAnimation {
+                        sheetContent = sheetContent == .hitch ? .request : .hitch
+                    }
+                }
+                .padding(.top, 80)
+                .padding(.leading, 342)
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
@@ -75,14 +83,46 @@ struct ContentView: View {
                 }
             }
             .sheet(isPresented:  showHitchSheetBinding) {
-                
-                HitchSheet(selectedDetent: $selectedDetent)
+                switch sheetContent {
+                case .hitch:
+                    HitchSheet(selectedDetent: $selectedDetent)
+                        .presentationDetents(
+                            [.height(70), .medium, .large],
+                            selection: $selectedDetent
+                        )
+                        .interactiveDismissDisabled()
+                        .presentationBackgroundInteraction(.enabled)
+                case .request:
+                    HitchRequestContainer(state: .incoming(HitchRequestData(
+                        name: "Nadya",
+                        amount: 20000,
+                        amountSign: .positive,
+                        fromLocation: "Autograph Tower Level 52",
+                        toLocation: "McDonald's Salemba Raya",
+                        status: .rideRequest
+                    ))) {
+                        withAnimation {
+                            sheetContent = .hitch
+                        }
+                    }
                     .presentationDetents(
-                        [.height(70), .medium, .large],
+                        [.height(70),.medium, .large],
                         selection: $selectedDetent
                     )
                     .interactiveDismissDisabled()
                     .presentationBackgroundInteraction(.enabled)
+//                    HitchRequestContainer(state: .empty) {
+//                        withAnimation {
+//                            sheetContent = .hitch
+//                        }
+//                    }
+//                    .presentationDetents(
+//                        [.height(70),.medium, .large],
+//                        selection: $selectedDetent
+//                    )
+//                    .interactiveDismissDisabled()
+//                    .presentationBackgroundInteraction(.enabled)
+                }
             }
             .onChange(of: path.isEmpty) { _, isEmpty in
                 if isEmpty {
