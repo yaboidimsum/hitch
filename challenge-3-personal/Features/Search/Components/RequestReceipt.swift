@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Receipt: View {
+struct RequestReceipt: View {
     var body: some View {
         VStack(spacing:20){
             VStack(spacing:12){
@@ -15,7 +15,8 @@ struct Receipt: View {
                 Rectangle()
                     .fill(.mutedSlate.opacity(0.2))
                     .frame(height: 1)
-                FriendCard()
+                FriendCard(data:         FriendCardData(name: "Kanye West", distance: "0.5m"),
+                )
                 
             }
             
@@ -66,5 +67,5 @@ struct Receipt: View {
 }
 
 #Preview {
-    Receipt()
+    RequestReceipt()
 }

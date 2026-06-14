@@ -8,33 +8,45 @@
 import SwiftUI
 
 struct LocationCard: View {
+    
+    let data: LocationCardData
+    
     var body: some View {
         VStack{
             HStack{
-                Image(systemName: "clock.fill")
+                Image(systemName: data.historyImage)
+                    .symbolRenderingMode(.hierarchical)
                     .foregroundStyle(.greenBrand)
                     .font(.callout)
-                VStack(alignment: .leading ,spacing:8){
-                    Text("Apple Developer Academy @ Binus")
+                    .frame(width: 24, height: 24)
+                    .padding(.trailing, 10)
+                Spacer()
+                VStack(alignment: .leading, spacing: 8) {
+                    Text(data.mainAddress)
                         .font(.caption)
                         .fontWeight(.semibold)
                         .foregroundStyle(.greenBrand)
-                    Text(
-                        "Jl. Grand Boulevard, BSD Green Office Park 9, BSD City, Sampora, Kec. Cisauk, Kabupaten Tangerang, Banten 15345, Indonesia"
+                    Text(data.subAddress
                     )
                     .font(.caption2)
                     .foregroundStyle(.greenBrand)
-                }
+                }.frame(width: .infinity)
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 20)
-        }
             Rectangle()
                 .fill(.mutedSlate.opacity(0.2))
                 .frame(height: 1)
+        }.frame(width: .infinity)
+            
     }
 }
 
 #Preview{
-    LocationCard()
+    LocationCard(
+        data:LocationCardData(
+            mainAddress:"Apple Developer Academy @ Binus",
+            subAddress: "Jl. Grand Boulevard, BSD Green Office Park 9, BSD City, Sampora, Kec. Cisauk, Kabupaten Tangerang, Banten 15345, Indonesia"
+        )
+    )
 }

@@ -8,35 +8,33 @@
 import SwiftUI
 
 struct FriendCard: View {
+    let data: FriendCardData
+    
     var body: some View {
-        VStack{
-            HStack{
-                HStack(spacing: 12){
-                    Image(systemName:"person.crop.circle")
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 40, height: 40)
-                        .clipShape(.circle)
-                        .foregroundStyle(.black)
-                    
-                    Text(
-                        "Kanye West"
-                    ).font(.caption).fontWeight(.semibold)
-                        .foregroundStyle(.greenBrand)
-                    
-                }
-                Spacer()
-                Text("0.5m").font(.caption).fontWeight(.semibold)
-            }
+        HStack(spacing: 12) {
+            Image(systemName: data.imageName)
+                .resizable()
+                .scaledToFill()
+                .frame(width: 40, height: 40)
+                .clipShape(.circle)
+                .foregroundStyle(.black)
             
-        }.padding(.horizontal, 16)
-            .padding(.vertical, 12).clipShape(.rect(cornerRadius: 16))
-//        Rectangle()
-//            .fill(.mutedSlate.opacity(0.2))
-//            .frame(height: 1)
+            Text(data.name)
+                .font(.caption)
+                .bold()
+                .foregroundStyle(.greenBrand)
+            
+            Spacer()
+            
+            Text(data.distance)
+                .font(.caption)
+                .bold()
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 12)
     }
 }
 
-#Preview{
-    FriendCard()
+#Preview {
+    FriendCard(data: FriendCardData(name: "Kanye West", distance: "0.5m"))
 }
