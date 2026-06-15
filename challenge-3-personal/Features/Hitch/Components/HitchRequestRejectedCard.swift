@@ -1,14 +1,12 @@
-//
-//  HitchRequestRejectedCard.swift
-//  challenge-3-personal
-//
-//  Created by Dimas Prihady Setyawan on 13/06/26.
-//
-
 import SwiftUI
 
 struct HitchRequestRejectedCard: View {
-    let data: HitchRequestData
+    let ride: Ride
+    let currentUserID: UUID
+    
+    private var otherPerson: User {
+        ride.driver.id == currentUserID ? ride.passenger : ride.driver
+    }
     
     var body: some View {
         VStack(alignment: .center, spacing: 20) {
@@ -18,7 +16,7 @@ struct HitchRequestRejectedCard: View {
                 .frame(width: 72, height: 72)
                 .foregroundStyle(.mutedSlate)
             
-            Text("Your request with \(data.name) has been rejected. See you on the next ride.")
+            Text("Your request with \(otherPerson.name) has been rejected. See you on the next ride.")
                 .font(.subheadline)
                 .fontWeight(.semibold)
                 .foregroundStyle(.greenBrand)
@@ -38,12 +36,6 @@ struct HitchRequestRejectedCard: View {
 }
 
 #Preview {
-    HitchRequestRejectedCard(data: HitchRequestData(
-        name: "Nadya",
-        amount: 20000,
-        amountSign: .positive,
-        fromLocation: "Autograph Tower Level 52",
-        toLocation: "McDonald's Salemba Raya",
-        status: .cancelled
-    ))
+    let store = AppStore.mock()
+    HitchRequestRejectedCard(ride: store.history[2], currentUserID: store.currentUser.id)
 }

@@ -20,7 +20,7 @@ struct DestinationCard: View {
                 Text("Autograph Tower Level 52")
                     .font(.caption)
                     .bold()
-                    .foregroundStyle(.greenBrand)
+                    .foregroundStyle(.ink)
             }
             
             Rectangle()

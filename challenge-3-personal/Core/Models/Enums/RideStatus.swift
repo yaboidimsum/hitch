@@ -1,27 +1,20 @@
-//
-//  RideStatus.swift
-//  challenge-3-personal
-//
-//  Created by Dimas Prihady Setyawan on 12/06/26.
-//
-
 import SwiftUI
 
-/// Represents the current state of a ride request.
 enum RideStatus: String {
-    case success = "Success"
-    case rideRequest = "Ride Request"
-    case cancelled = "Cancelled"
+    case pending = "Pending"
+    case accepted = "Accepted"
     case inProgress = "In Progress"
+    case completed = "Completed"
+    case cancelled = "Cancelled"
     
     var color: Color {
         switch self {
-        case .success, .rideRequest:
+        case .pending, .accepted, .completed:
             .greenBrand
-        case .cancelled:
-            .red
         case .inProgress:
             .orange
+        case .cancelled:
+            .red
         }
     }
 }

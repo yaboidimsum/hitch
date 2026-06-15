@@ -1,21 +1,17 @@
-//
-//  WeatherActivity.swift
-//  challenge-3-personal
-//
-//  Created by Dimas Prihady Setyawan on 12/06/26.
-//
-
 import SwiftUI
 
-struct WeatherActivity: View{
+struct WeatherActivity: View {
+    @Environment(AppStore.self) var store
+    
     var body: some View {
-        HStack{
-            Image(systemName: "sun.max.fill").font(.title2)
+        HStack {
+            Image(systemName: store.weather.iconName)
+                .font(.title2)
                 .foregroundStyle(.sun)
-            Text("27°C").font(Font.system(.body, design: .rounded))
+            Text(store.weather.displayText)
+                .font(Font.system(.body, design: .rounded))
         }
         .padding(8)
-//        .background(.white)
         .clipShape(.rect(cornerRadius: 999))
         .glassEffect()
     }
@@ -23,4 +19,5 @@ struct WeatherActivity: View{
 
 #Preview {
     WeatherActivity()
+        .environment(AppStore.mock())
 }

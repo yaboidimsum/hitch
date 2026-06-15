@@ -1,14 +1,8 @@
-//
-//  HitchRequestContainer.swift
-//  challenge-3-personal
-//
-//  Created by Dimas Prihady Setyawan on 13/06/26.
-//
-
 import SwiftUI
 
 struct HitchRequestContainer: View {
     let state: HitchRequestState
+    let currentUserID: UUID
     let onBack: () -> Void
     
     var body: some View {
@@ -41,17 +35,17 @@ struct HitchRequestContainer: View {
                         .foregroundStyle(.mutedSlate)
                         .italic()
                     
-                case .incoming(let data):
-                    HitchRequestIncomingCard(data: data)
+                case .incoming(let ride):
+                    HitchRequestIncomingCard(ride: ride, currentUserID: currentUserID)
                     
-                case .inProgress(let data):
-                    HitchRequestProgressCard(data: data)
+                case .inProgress(let ride):
+                    HitchRequestProgressCard(ride: ride, currentUserID: currentUserID)
                     
-                case .done(let data):
-                    HitchRequestDoneCard(data: data)
+                case .done(let ride):
+                    HitchRequestDoneCard(ride: ride, currentUserID: currentUserID)
                     
-                case .rejected(let data):
-                    HitchRequestRejectedCard(data: data)
+                case .rejected(let ride):
+                    HitchRequestRejectedCard(ride: ride, currentUserID: currentUserID)
                 }
             }
             .scrollBounceBehavior(.basedOnSize)
@@ -60,43 +54,6 @@ struct HitchRequestContainer: View {
 }
 
 #Preview {
-    VStack() {
-        HitchRequestContainer(state: .empty, onBack: {})
-        
-//        HitchRequestContainer(state: .incoming(HitchRequestData(
-//            name: "Nadya",
-//            amount: 20000,
-//            amountSign: .positive,
-//            fromLocation: "Autograph Tower Level 52",
-//            toLocation: "McDonald's Salemba Raya",
-//            status: .rideRequest
-//        )), onBack: {})
-//        
-//        HitchRequestContainer(state: .inProgress(HitchRequestData(
-//            name: "Nadya",
-//            amount: 20000,
-//            amountSign: .positive,
-//            fromLocation: "Autograph Tower Level 52",
-//            toLocation: "McDonald's Salemba Raya",
-//            status: .inProgress
-//        )), onBack: {})
-//        
-//        HitchRequestContainer(state: .done(HitchRequestData(
-//            name: "Nadya",
-//            amount: 20000,
-//            amountSign: .positive,
-//            fromLocation: "Autograph Tower Level 52",
-//            toLocation: "McDonald's Salemba Raya",
-//            status: .success
-//        )), onBack: {})
-//        
-//        HitchRequestContainer(state: .rejected(HitchRequestData(
-//            name: "Nadya",
-//            amount: 20000,
-//            amountSign: .positive,
-//            fromLocation: "Autograph Tower Level 52",
-//            toLocation: "McDonald's Salemba Raya",
-//            status: .cancelled
-//        )), onBack: {})
-    }
+    let store = AppStore.mock()
+    HitchRequestContainer(state: .empty, currentUserID: store.currentUser.id, onBack: {})
 }

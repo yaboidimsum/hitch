@@ -1,25 +1,25 @@
-//
-//  HitchCard.swift
-//  challenge-3-personal
-//
-//  Created by Dimas Prihady Setyawan on 12/06/26.
-//
-
 import SwiftUI
 
 struct HitchCard: View {
-    let name: String
-    let occupation: String
-    let destination: String
-    let status: RideStatus
-    let amount: Int
-    let amountSign: AmountSign
-    let imageUrl: String
+    let ride: Ride
+    let currentUserID: UUID
+    
+    private var otherPerson: User {
+        ride.driver.id == currentUserID ? ride.passenger : ride.driver
+    }
+    
+    private var role: RideRole {
+        ride.role(for: currentUserID)
+    }
+    
+    private var isIncoming: Bool {
+        ride.isIncoming(for: currentUserID)
+    }
     
     var body: some View {
         HStack(alignment: .top) {
             HStack(alignment: .center) {
-                AsyncImage(url: URL(string: imageUrl)) { image in
+                AsyncImage(url: URL(string: otherPerson.avatarURL)) { image in
                     image
                         .resizable()
                         .scaledToFill()
@@ -32,20 +32,20 @@ struct HitchCard: View {
                 
                 VStack(alignment: .leading) {
                     VStack(alignment: .leading) {
-                        Text("\(name) (\(occupation))")
+                        Text("\(otherPerson.name) (\(role.rawValue))")
                             .fontWeight(.medium)
                             .foregroundStyle(.ink.opacity(0.8))
-                        Text(destination)
+                        Text(ride.destination.name)
                             .fontWeight(.semibold)
                             .foregroundStyle(.ink)
                     }
                     .font(.footnote)
                     
-                    Text(status.rawValue)
+                    Text(ride.rideStatus.rawValue)
                         .foregroundStyle(.white)
                         .padding(.horizontal, 12)
                         .padding(.vertical, 6)
-                        .background(status.color)
+                        .background(ride.rideStatus.color)
                         .clipShape(.rect(cornerRadius: 999))
                         .fontWeight(.semibold)
                         .font(.caption2)
@@ -56,12 +56,10 @@ struct HitchCard: View {
             Spacer()
             
             HStack(spacing: 4) {
-                
-                
-                Text("\(amountSign.prefix)Rp\(amount, format: .number)")
+                Text("\(isIncoming ? "+" : "-")Rp\(ride.amount, format: .number)")
                     .font(.caption2)
                     .fontWeight(.medium)
-                    .foregroundStyle(amountSign == .positive ? .greenBrand : .ink.opacity(0.8))
+                    .foregroundStyle(isIncoming ? .greenBrand : .ink.opacity(0.8))
             }
         }
         .padding(.horizontal, 16)
@@ -71,35 +69,21 @@ struct HitchCard: View {
 }
 
 #Preview {
+    let store = AppStore.mock()
     VStack(spacing: 12) {
         HitchCard(
-            name: "Kanye West",
-            occupation: "Passenger",
-            destination: "McDonald's Salemba Raya",
-            status: .rideRequest,
-            amount: 20000,
-            amountSign: .positive,
-            imageUrl: "https://api.dicebear.com/10.x/lorelei/png?seed=Kanye"
+            ride: store.history[0],
+            currentUserID: store.currentUser.id
         )
         
         HitchCard(
-            name: "John Doe",
-            occupation: "Driver",
-            destination: "Central Park Mall",
-            status: .cancelled,
-            amount: 20000,
-            amountSign: .negative,
-            imageUrl: "https://api.dicebear.com/10.x/lorelei/png?seed=John"
+            ride: store.history[1],
+            currentUserID: store.currentUser.id
         )
         
         HitchCard(
-            name: "Jane Smith",
-            occupation: "Passenger",
-            destination: "Grand Indonesia",
-            status: .inProgress,
-            amount: 20000,
-            amountSign: .neutral,
-            imageUrl: "https://api.dicebear.com/10.x/lorelei/png?seed=Jane"
+            ride: store.history[2],
+            currentUserID: store.currentUser.id
         )
     }
     .padding()

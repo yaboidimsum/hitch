@@ -1,34 +1,27 @@
-//
-//  RecentItem.swift
-//  challenge-3-personal
-//
-
 import SwiftUI
 
 struct RecentItem: View {
-    let name: String
-    let address: String
+    let place: Place
     let showDivider: Bool
-    let iconName: String
 
     var body: some View {
         HStack(alignment: .top, spacing: 16) {
-            Image(systemName: iconName)
+            Image(systemName: place.iconName)
                 .font(.title3)
-                .foregroundStyle(.greenBrand)
+                .foregroundStyle(.ink)
                 .frame(width: 32, height: 32)
 
             VStack(spacing: 16) {
                 HStack {
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(name)
+                        Text(place.name)
                             .font(.subheadline)
                             .fontWeight(.semibold)
-                            .foregroundStyle(.primary)
-                        Text(address)
+                            .foregroundStyle(.ink)
+                        Text(place.address)
                             .font(.caption2)
                             .fontWeight(.regular)
-                            .foregroundStyle(.secondary)
+                            .foregroundStyle(.ink)
                     }
 
                     Spacer()
@@ -47,9 +40,10 @@ struct RecentItem: View {
 }
 
 #Preview {
+    let store = AppStore.mock()
     VStack(spacing: 16) {
-        RecentItem(name: "Autograph Tower", address: "Casablanca, Jakarta Selatan", showDivider: true, iconName: "building.2.fill")
-        RecentItem(name: "Apple Developer Academy", address: "BSD Green Office Park, Tangerang", showDivider: false, iconName: "apple.logo")
+        RecentItem(place: store.recentPlaces[0], showDivider: true)
+        RecentItem(place: store.recentPlaces[1], showDivider: false)
     }
     .padding()
 }

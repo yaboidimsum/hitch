@@ -10,6 +10,7 @@ import SwiftUI
 struct Searchbar: View {
     @Binding var selectedDetent: PresentationDetent
     @State private var searchText = ""
+    var onSearchTapped: () -> Void
     
     var body: some View {
         HStack {
@@ -45,10 +46,14 @@ struct Searchbar: View {
         .contentShape(.rect)
         .onTapGesture {
             selectedDetent = .medium
+            onSearchTapped()
         }
     }
 }
 
 #Preview {
-    Searchbar(selectedDetent: .constant(.height(70)))
+    Searchbar(
+        selectedDetent: .constant(.height(70)),
+        onSearchTapped: {}
+    )
 }

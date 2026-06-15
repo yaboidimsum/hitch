@@ -1,18 +1,16 @@
-//
-//  HitchRequestIncomingCard.swift
-//  challenge-3-personal
-//
-//  Created by Dimas Prihady Setyawan on 13/06/26.
-//
-
 import SwiftUI
 
 struct HitchRequestIncomingCard: View {
-    let data: HitchRequestData
+    let ride: Ride
+    let currentUserID: UUID
+    
+    private var otherPerson: User {
+        ride.driver.id == currentUserID ? ride.passenger : ride.driver
+    }
     
     var body: some View {
         HStack(alignment: .center, spacing: 16) {
-            AsyncImage(url: URL(string: data.profileImage)) { image in
+            AsyncImage(url: URL(string: otherPerson.avatarURL)) { image in
                 image
                     .resizable()
                     .scaledToFill()
@@ -24,12 +22,12 @@ struct HitchRequestIncomingCard: View {
             .clipShape(.circle)
             
             VStack(alignment: .leading, spacing: 4) {
-                Text("\(data.amountSign.prefix)Rp\(data.amount, format: .number)")
+                Text("\(ride.isIncoming(for: currentUserID) ? "+" : "-")Rp\(ride.amount, format: .number)")
                     .font(.footnote)
                     .fontWeight(.semibold)
                     .foregroundStyle(.greenBrand)
                 
-                Text(data.name)
+                Text(otherPerson.name)
                     .fontWeight(.semibold)
                     .foregroundStyle(.ink.opacity(0.8))
                     .font(.footnote)
@@ -37,11 +35,11 @@ struct HitchRequestIncomingCard: View {
                 VStack(alignment: .leading, spacing: 4) {
                     HStack(spacing: 4) {
                         Text("From:").fontWeight(.semibold)
-                        Text(data.fromLocation).fontWeight(.medium)
+                        Text(ride.origin.name).fontWeight(.medium)
                     }
                     HStack(spacing: 4) {
                         Text("To:").fontWeight(.semibold)
-                        Text(data.toLocation).fontWeight(.medium)
+                        Text(ride.destination.name).fontWeight(.medium)
                     }
                 }
                 .font(.caption2)
@@ -73,12 +71,6 @@ struct HitchRequestIncomingCard: View {
 }
 
 #Preview {
-    HitchRequestIncomingCard(data: HitchRequestData(
-        name: "Nadya",
-        amount: 20000,
-        amountSign: .positive,
-        fromLocation: "Autograph Tower Level 52",
-        toLocation: "McDonald's Salemba Raya",
-        status: .rideRequest
-    ))
+    let store = AppStore.mock()
+    HitchRequestIncomingCard(ride: store.pendingRides[0], currentUserID: store.currentUser.id)
 }

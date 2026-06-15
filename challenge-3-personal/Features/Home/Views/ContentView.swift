@@ -1,18 +1,14 @@
-//
-//  ContentView.swift
-//  challenge-3-personal
-//
-
 import SwiftUI
 import MapKit
 
 enum SheetContent {
     case hitch
     case request
+    case search
 }
 
 struct ContentView: View {
-    @State private var greeting = Greeting(message: "Hello, world!", recipient: "world")
+    @Environment(AppStore.self) var store
     @State private var showHitchSheet = true
     @State private var selectedDetent: PresentationDetent = .fraction(0.15)
     @State private var model = MapModel()
@@ -39,8 +35,7 @@ struct ContentView: View {
                         let maxDistance = 0.2 // degrees
                         if abs(center.latitude - (-6.2088)) > maxDistance ||
                             abs(center.longitude - 106.8456) > maxDistance {
-                            Task { model.snapToCity()
-                            }
+                            Task { model.snapToCity() }
                         }
                     }
                 
@@ -67,62 +62,65 @@ struct ContentView: View {
                         Button("history", systemImage: "clock.arrow.trianglehead.counterclockwise.rotate.90", action: {
                             path.append("activity")
                         })
+                        Button("debug", systemImage: "ladybug", action: {
+                            path.append("debugmap")
+                        })
+                        .foregroundStyle(.red)
                     }
                 }
-                
             }
             .navigationDestination(for: String.self) { value in
                 if value == "activity" {
                     Activity()
-                }
-                else if value == "notification"{
+                } else if value == "notification" {
                     Notification()
-                }
-                else if value == "history"{
+                } else if value == "history" {
                     History()
+                } else if value == "debugmap" {
+                    MapDebugView()
                 }
             }
-            .sheet(isPresented:  showHitchSheetBinding) {
+            .sheet(isPresented: showHitchSheetBinding) {
                 switch sheetContent {
                 case .hitch:
-                    HitchSheet(selectedDetent: $selectedDetent)
-                        .presentationDetents(
-                            [.fraction(0.10), .medium, .large],
-                            selection: $selectedDetent
-                        )
-                        .interactiveDismissDisabled()
-                        .presentationBackgroundInteraction(.enabled)
-                case .request:
-                    HitchRequestContainer(state: .incoming(HitchRequestData(
-                        name: "Nadya",
-                        amount: 20000,
-                        amountSign: .positive,
-                        fromLocation: "Autograph Tower Level 52",
-                        toLocation: "McDonald's Salemba Raya",
-                        status: .rideRequest,
-                        profileImage: "https://api.dicebear.com/10.x/lorelei/png?seed=Nadya"
-                    ))) {
-                        withAnimation {
-                            sheetContent = .hitch
+                    HitchSheet(
+                        selectedDetent: $selectedDetent,
+                        onSearchTapped: {
+                            withAnimation {
+                                sheetContent = .search
+                            }
                         }
-                    }
+                    )
                     .presentationDetents(
                         [.fraction(0.10), .medium, .large],
                         selection: $selectedDetent
                     )
                     .interactiveDismissDisabled()
                     .presentationBackgroundInteraction(.enabled)
-//                    HitchRequestContainer(state: .empty) {
-//                        withAnimation {
-//                            sheetContent = .hitch
-//                        }
-//                    }
-//                    .presentationDetents(
-//                        [.height(70),.medium, .large],
-//                        selection: $selectedDetent
-//                    )
-//                    .interactiveDismissDisabled()
-//                    .presentationBackgroundInteraction(.enabled)
+                    
+                case .request:
+                    if let pendingRide = store.pendingRides.first {
+                        HitchRequestContainer(
+                            state: .incoming(pendingRide),
+                            currentUserID: store.currentUser.id
+                        ) {
+                            withAnimation {
+                                sheetContent = .hitch
+                            }
+                        }
+                        .presentationDetents(
+                            [.fraction(0.10), .medium, .large],
+                            selection: $selectedDetent
+                        )
+                        .interactiveDismissDisabled()
+                        .presentationBackgroundInteraction(.enabled)
+                    }
+                    
+                case .search:
+                    SearchFlow(sheetContent: $sheetContent)
+                        .presentationDetents([.medium, .large])
+                        .interactiveDismissDisabled()
+                        .presentationBackgroundInteraction(.enabled)
                 }
             }
             .onChange(of: path.isEmpty) { _, isEmpty in
@@ -136,4 +134,5 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+        .environment(AppStore.mock())
 }

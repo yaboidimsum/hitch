@@ -1,18 +1,11 @@
-//
-//  FriendItem.swift
-//  challenge-3-personal
-//
-
 import SwiftUI
 
 struct FriendItem: View {
-    let name: String
-    let distance: String
-    let imageUrl: String
-
+    let friend: User
+    
     var body: some View {
         VStack(spacing: 8) {
-            AsyncImage(url: URL(string: imageUrl)) { image in
+            AsyncImage(url: URL(string: friend.avatarURL)) { image in
                 image
                     .resizable()
                     .scaledToFill()
@@ -24,11 +17,11 @@ struct FriendItem: View {
             .clipShape(.circle)
 
             VStack(spacing: 4) {
-                Text(name)
+                Text(friend.name)
                     .foregroundStyle(.ink)
                     .font(.caption)
                     .fontWeight(.medium)
-                Text(distance)
+                Text("Nearby")
                     .foregroundStyle(.ink)
                     .font(.caption2)
                     .fontWeight(.medium)
@@ -38,5 +31,6 @@ struct FriendItem: View {
 }
 
 #Preview {
-    FriendItem(name: "John Doe", distance: "25m", imageUrl: "https://api.dicebear.com/10.x/lorelei/png?seed=John")
+    let store = AppStore.mock()
+    FriendItem(friend: store.friends[0])
 }

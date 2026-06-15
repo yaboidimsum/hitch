@@ -1,21 +1,19 @@
-//
-//  HitchRequestProgressCard.swift
-//  challenge-3-personal
-//
-//  Created by Dimas Prihady Setyawan on 13/06/26.
-//
-
 import SwiftUI
 
 struct HitchRequestProgressCard: View {
-    let data: HitchRequestData
+    let ride: Ride
+    let currentUserID: UUID
+    
+    private var otherPerson: User {
+        ride.driver.id == currentUserID ? ride.passenger : ride.driver
+    }
     
     var body: some View {
         VStack(spacing: 20) {
             Text("Go pick em!").fontWeight(.semibold)
             
             HStack(alignment: .center, spacing: 16) {
-                AsyncImage(url: URL(string: data.profileImage)) { image in
+                AsyncImage(url: URL(string: otherPerson.avatarURL)) { image in
                     image
                         .resizable()
                         .scaledToFill()
@@ -27,12 +25,12 @@ struct HitchRequestProgressCard: View {
                 .clipShape(.circle)
                 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("\(data.amountSign.prefix)Rp\(data.amount, format: .number)")
+                    Text("\(ride.isIncoming(for: currentUserID) ? "+" : "-")Rp\(ride.amount, format: .number)")
                         .font(.footnote)
                         .fontWeight(.semibold)
                         .foregroundStyle(.greenBrand)
                     
-                    Text(data.name)
+                    Text(otherPerson.name)
                         .fontWeight(.semibold)
                         .foregroundStyle(.ink.opacity(0.8))
                         .font(.footnote)
@@ -40,11 +38,11 @@ struct HitchRequestProgressCard: View {
                     VStack(alignment: .leading, spacing: 4) {
                         HStack(spacing: 4) {
                             Text("From:").fontWeight(.semibold)
-                            Text(data.fromLocation).fontWeight(.medium)
+                            Text(ride.origin.name).fontWeight(.medium)
                         }
                         HStack(spacing: 4) {
                             Text("To:").fontWeight(.semibold)
-                            Text(data.toLocation).fontWeight(.medium)
+                            Text(ride.destination.name).fontWeight(.medium)
                         }
                     }
                     .font(.caption2)
@@ -69,12 +67,6 @@ struct HitchRequestProgressCard: View {
 }
 
 #Preview {
-    HitchRequestProgressCard(data: HitchRequestData(
-        name: "Nadya",
-        amount: 20000,
-        amountSign: .positive,
-        fromLocation: "Autograph Tower Level 52",
-        toLocation: "McDonald's Salemba Raya",
-        status: .inProgress
-    ))
+    let store = AppStore.mock()
+    HitchRequestProgressCard(ride: store.activeRides[0], currentUserID: store.currentUser.id)
 }

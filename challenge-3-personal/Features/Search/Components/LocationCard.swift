@@ -1,52 +1,43 @@
-//
-//  LocationCard.swift
-//  challenge-3-personal
-//
-//  Created by Dimas Prihady Setyawan on 14/06/26.
-//
-
 import SwiftUI
 
 struct LocationCard: View {
-    
-    let data: LocationCardData
+    let place: Place
     
     var body: some View {
-        VStack{
-            HStack{
-                Image(systemName: data.historyImage)
+        VStack {
+            HStack {
+                Image(systemName: place.iconName)
                     .symbolRenderingMode(.hierarchical)
-                    .foregroundStyle(.greenBrand)
+                    .foregroundStyle(.ink)
                     .font(.callout)
                     .frame(width: 24, height: 24)
                     .padding(.trailing, 10)
+                
                 Spacer()
+                
                 VStack(alignment: .leading, spacing: 8) {
-                    Text(data.mainAddress)
+                    Text(place.name)
                         .font(.caption)
                         .fontWeight(.semibold)
-                        .foregroundStyle(.greenBrand)
-                    Text(data.subAddress
-                    )
-                    .font(.caption2)
-                    .foregroundStyle(.greenBrand)
-                }.frame(width: .infinity)
+                        .foregroundStyle(.ink)
+                    Text(place.address)
+                        .font(.caption2)
+                        .foregroundStyle(.ink)
+                }
+                .frame(maxWidth: .infinity, alignment: .leading)
             }
             .padding(.horizontal, 16)
             .padding(.vertical, 20)
+            
             Rectangle()
                 .fill(.mutedSlate.opacity(0.2))
                 .frame(height: 1)
-        }.frame(width: .infinity)
-            
+        }
+        .frame(maxWidth: .infinity)
     }
 }
 
-#Preview{
-    LocationCard(
-        data:LocationCardData(
-            mainAddress:"Apple Developer Academy @ Binus",
-            subAddress: "Jl. Grand Boulevard, BSD Green Office Park 9, BSD City, Sampora, Kec. Cisauk, Kabupaten Tangerang, Banten 15345, Indonesia"
-        )
-    )
+#Preview {
+    let store = AppStore.mock()
+    LocationCard(place: store.recentPlaces[0])
 }

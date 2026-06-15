@@ -1,27 +1,21 @@
-//
-//  HitchRequestSheet.swift
-//  challenge-3-personal
-//
-//  Created by Dimas Prihady Setyawan on 13/06/26.
-//
-
 import SwiftUI
 
 struct HitchRequestSheet: View {
+    @Environment(AppStore.self) var store
+    
     var body: some View {
-        ScrollView{
-            HitchRequestProgressCard(data: HitchRequestData(
-                name: "Nadya",
-                amount: 20000,
-                amountSign: .positive,
-                fromLocation: "Autograph Tower Level 52",
-                toLocation: "McDonald's Salemba Raya",
-                status: .inProgress
-            ))
+        ScrollView {
+            if let activeRide = store.activeRides.first {
+                HitchRequestProgressCard(
+                    ride: activeRide,
+                    currentUserID: store.currentUser.id
+                )
+            }
         }
     }
 }
 
 #Preview {
     HitchRequestSheet()
+        .environment(AppStore.mock())
 }

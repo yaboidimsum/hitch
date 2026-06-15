@@ -1,44 +1,60 @@
-//
-//  RequestPickFriend.swift
-//  challenge-3-personal
-//
-//  Created by Dimas Prihady Setyawan on 14/06/26.
-//
-
 import SwiftUI
 
 struct RequestPickFriend: View {
-    private let friends = [
-        FriendCardData(name: "Kanye West", distance: "0.5m", imageUrl: "https://api.dicebear.com/10.x/lorelei/png?seed=Kanye"),
-        FriendCardData(name: "John Doe", distance: "1.2km", imageUrl: "https://api.dicebear.com/10.x/lorelei/png?seed=John"),
-        FriendCardData(name: "Jane Doe", distance: "2.3km", imageUrl: "https://api.dicebear.com/10.x/lorelei/png?seed=Jane"),
-        FriendCardData(name: "Mike Smith", distance: "3.1km", imageUrl: "https://api.dicebear.com/10.x/lorelei/png?seed=Mike"),
-        FriendCardData(name: "Sarah Lee", distance: "4.5km", imageUrl: "https://api.dicebear.com/10.x/lorelei/png?seed=Sarah"),
-        FriendCardData(name: "Tom Brown", distance: "5.0km", imageUrl: "https://api.dicebear.com/10.x/lorelei/png?seed=Tom"),
-        FriendCardData(name: "Emily Davis", distance: "6.2km", imageUrl: "https://api.dicebear.com/10.x/lorelei/png?seed=Emily")
-    ]
+    @Environment(AppStore.self) var store
+    let onBack: () -> Void
+    let onConfirm: () -> Void
     
     var body: some View {
-        VStack(spacing: 20) {
-            VStack {
-                DestinationCard()
-                    .padding(.vertical, 12)
-                    .padding(.horizontal, 16)
-                Rectangle()
-                    .fill(.mutedSlate.opacity(0.2))
-                    .frame(height: 1)
-            }
-            
-            VStack(alignment: .leading, spacing: 20) {
-                Text("Who'll picked you up?")
-                    .font(.headline)
-                    .foregroundStyle(.greenBrand)
-                    .padding(.horizontal, 16)
+        VStack(spacing: 0) {
+            HStack {
+                Button("Back", systemImage: "chevron.left", action: onBack)
+                    .labelStyle(.iconOnly)
+                    .font(.title3)
+                    .foregroundStyle(.ink)
+                    .frame(width: 44, height: 44)
+                    .clipShape(.circle)
+                    .glassEffect()
                 
-                ScrollView {
-                    VStack(spacing: 0) {
-                        ForEach(friends) { friend in
-                            FriendCard(data: friend)
+                Spacer()
+                Text("Hitch Request")
+                    .bold()
+                    .foregroundStyle(.ink)
+                Spacer()
+                Button("Confirm", systemImage: "checkmark", action: onConfirm)
+                    .labelStyle(.iconOnly)
+                    .font(.title3)
+                    .foregroundStyle(.white)
+                    .frame(width: 44, height: 44)
+                    .background(.greenBrand)
+                    .clipShape(.circle)
+                    .glassEffect()
+            }
+            .padding(.horizontal, 16)
+            .padding(.top, 24)
+            .padding(.bottom, 20)
+            
+            ScrollView {
+                VStack(spacing: 20) {
+                    VStack {
+                        DestinationCard()
+                            .padding(.vertical, 12)
+                            .padding(.horizontal, 16)
+                        Rectangle()
+                            .fill(.mutedSlate.opacity(0.2))
+                            .frame(height: 1)
+                    }
+                    
+                    VStack(alignment: .leading, spacing: 20) {
+                        Text("Who'll picked you up?")
+                            .font(.headline)
+                            .foregroundStyle(.ink)
+                            .padding(.horizontal, 16)
+                        
+                        VStack(spacing: 0) {
+                            ForEach(store.friends) { friend in
+                                FriendCard(friend: friend)
+                            }
                         }
                     }
                 }
@@ -48,5 +64,8 @@ struct RequestPickFriend: View {
 }
 
 #Preview {
-    RequestPickFriend()
+    NavigationStack {
+        RequestPickFriend(onBack: {}, onConfirm: {})
+            .environment(AppStore.mock())
+    }
 }

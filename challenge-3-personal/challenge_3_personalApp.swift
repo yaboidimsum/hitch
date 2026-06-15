@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct challenge_3_personalApp: App {
+    
+    @State private var store = AppStore.mock()
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView().environment(store)
         }
     }
 }

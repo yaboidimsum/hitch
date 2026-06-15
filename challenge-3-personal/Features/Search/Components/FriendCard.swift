@@ -1,18 +1,11 @@
-//
-//  FriendCard.swift
-//  challenge-3-personal
-//
-//  Created by Dimas Prihady Setyawan on 14/06/26.
-//
-
 import SwiftUI
 
 struct FriendCard: View {
-    let data: FriendCardData
+    let friend: User
     
     var body: some View {
         HStack(spacing: 12) {
-            AsyncImage(url: URL(string: data.imageUrl)) { image in
+            AsyncImage(url: URL(string: friend.avatarURL)) { image in
                 image
                     .resizable()
                     .scaledToFill()
@@ -23,14 +16,14 @@ struct FriendCard: View {
             .frame(width: 40, height: 40)
             .clipShape(.circle)
             
-            Text(data.name)
+            Text(friend.name)
                 .font(.caption)
                 .bold()
-                .foregroundStyle(.greenBrand)
+                .foregroundStyle(.ink)
             
             Spacer()
             
-            Text(data.distance)
+            Text("Nearby")
                 .font(.caption)
                 .bold()
         }
@@ -40,5 +33,6 @@ struct FriendCard: View {
 }
 
 #Preview {
-    FriendCard(data: FriendCardData(name: "Kanye West", distance: "0.5m"))
+    let store = AppStore.mock()
+    FriendCard(friend: store.friends[0])
 }

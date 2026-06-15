@@ -1,49 +1,61 @@
-//
-//  RequestSearchLocation.swift
-//  challenge-3-personal
-//
-//  Created by Dimas Prihady Setyawan on 14/06/26.
-//
-
 import SwiftUI
 
-struct RequestSearchLocation: View{
-    
-    private let locations = [
-        LocationCardData(
-            mainAddress: "Apple Developer Academy @ Binus",
-            subAddress: "Jl. Grand Boulevard, BSD Green Office Park 9, BSD City, Sampora, Kec. Cisauk, Kabupaten Tangerang, Banten 15345, Indonesia",
-         
-        ),
-        LocationCardData(
-            mainAddress: "Gelora Bung Karno",
-            subAddress: "Jl. Pintu Satu Senayan, RT.1/RW.3, Gelora, Kec. Tanah Abang, Jakarta Pusat, DKI Jakarta 10270",
-         
-        ),
-        
-    ]
+struct RequestSearchLocation: View {
+    @Environment(AppStore.self) var store
+    let onDismiss: () -> Void
     
     var body: some View {
-        VStack(spacing:20){
-            VStack(alignment:.leading, spacing:12){
-                DestinationCard()
-                MapButton()
-            }.padding(.horizontal,16)
-            ScrollView{
+        VStack(alignment: .leading, spacing: 0) {
+            HStack {
+                Button("Back", systemImage: "chevron.left", action: onDismiss)
+                    .labelStyle(.iconOnly)
+                    .font(.title3)
+                    .foregroundStyle(.ink)
+                    .frame(width: 44, height: 44)
+                    .clipShape(.circle)
+                    .glassEffect()
+                
+                Spacer()
+                Text("Hitch Request")
+                    .bold()
+                    .foregroundStyle(.ink)
+                Spacer()
+                NavigationLink(value: SearchDestination.pickFriend) {
+                    Image(systemName: "checkmark")
+                        .font(.title3)
+                        .foregroundStyle(.white)
+                        .frame(width: 44, height: 44)
+                        .background(.greenBrand)
+                        .clipShape(.circle)
+                        .glassEffect()
+                }
+            }
+            .padding(.horizontal, 16)
+            .padding(.top, 24)
+            .padding(.bottom, 20)
+            
+            ScrollView {
+                VStack(alignment: .leading, spacing: 12) {
+                    DestinationCard()
+                    MapButton()
+                }
+                .padding(.horizontal, 16)
+                
                 Rectangle()
                     .fill(.mutedSlate.opacity(0.2))
                     .frame(height: 1)
-               
-                ForEach(locations){
-                    location in LocationCard(data:location)
-                }
                 
+                ForEach(store.recentPlaces) { place in
+                    LocationCard(place: place)
+                }
             }
         }
     }
 }
 
-#Preview{
-    RequestSearchLocation()
+#Preview {
+    NavigationStack {
+        RequestSearchLocation(onDismiss: {})
+            .environment(AppStore.mock())
+    }
 }
- 
