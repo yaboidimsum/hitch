@@ -22,7 +22,7 @@ struct HitchRequestData: Identifiable {
         fromLocation: String,
         toLocation: String,
         status: RideStatus,
-        profileImage: String = "person"
+        profileImage: String = "https://api.dicebear.com/10.x/lorelei/png?seed=Nadya"
     ) {
         self.name = name
         self.amount = amount

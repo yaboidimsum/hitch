@@ -12,12 +12,16 @@ struct FriendCard: View {
     
     var body: some View {
         HStack(spacing: 12) {
-            Image(systemName: data.imageName)
-                .resizable()
-                .scaledToFill()
-                .frame(width: 40, height: 40)
-                .clipShape(.circle)
-                .foregroundStyle(.black)
+            AsyncImage(url: URL(string: data.imageUrl)) { image in
+                image
+                    .resizable()
+                    .scaledToFill()
+            } placeholder: {
+                Circle()
+                    .fill(.gray.opacity(0.3))
+            }
+            .frame(width: 40, height: 40)
+            .clipShape(.circle)
             
             Text(data.name)
                 .font(.caption)

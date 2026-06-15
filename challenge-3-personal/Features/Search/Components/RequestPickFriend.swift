@@ -9,13 +9,13 @@ import SwiftUI
 
 struct RequestPickFriend: View {
     private let friends = [
-        FriendCardData(name: "Kanye West", distance: "0.5m"),
-        FriendCardData(name: "John Doe", distance: "1.2km"),
-        FriendCardData(name: "Jane Doe", distance: "2.3km"),
-        FriendCardData(name: "Mike Smith", distance: "3.1km"),
-        FriendCardData(name: "Sarah Lee", distance: "4.5km"),
-        FriendCardData(name: "Tom Brown", distance: "5.0km"),
-        FriendCardData(name: "Emily Davis", distance: "6.2km")
+        FriendCardData(name: "Kanye West", distance: "0.5m", imageUrl: "https://api.dicebear.com/10.x/lorelei/png?seed=Kanye"),
+        FriendCardData(name: "John Doe", distance: "1.2km", imageUrl: "https://api.dicebear.com/10.x/lorelei/png?seed=John"),
+        FriendCardData(name: "Jane Doe", distance: "2.3km", imageUrl: "https://api.dicebear.com/10.x/lorelei/png?seed=Jane"),
+        FriendCardData(name: "Mike Smith", distance: "3.1km", imageUrl: "https://api.dicebear.com/10.x/lorelei/png?seed=Mike"),
+        FriendCardData(name: "Sarah Lee", distance: "4.5km", imageUrl: "https://api.dicebear.com/10.x/lorelei/png?seed=Sarah"),
+        FriendCardData(name: "Tom Brown", distance: "5.0km", imageUrl: "https://api.dicebear.com/10.x/lorelei/png?seed=Tom"),
+        FriendCardData(name: "Emily Davis", distance: "6.2km", imageUrl: "https://api.dicebear.com/10.x/lorelei/png?seed=Emily")
     ]
     
     var body: some View {

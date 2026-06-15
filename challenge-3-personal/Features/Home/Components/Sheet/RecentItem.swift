@@ -9,14 +9,14 @@ struct RecentItem: View {
     let name: String
     let address: String
     let showDivider: Bool
+    let iconName: String
 
     var body: some View {
         HStack(alignment: .top, spacing: 16) {
-            Image(systemName: "person.fill")
-                .resizable()
-                .scaledToFill()
+            Image(systemName: iconName)
+                .font(.title3)
+                .foregroundStyle(.greenBrand)
                 .frame(width: 32, height: 32)
-                .clipShape(.circle)
 
             VStack(spacing: 16) {
                 HStack {
@@ -47,5 +47,9 @@ struct RecentItem: View {
 }
 
 #Preview {
-    RecentItem(name: "Little Olie!", address: "Bendungan Hilir, South Jakarta", showDivider: true)
+    VStack(spacing: 16) {
+        RecentItem(name: "Autograph Tower", address: "Casablanca, Jakarta Selatan", showDivider: true, iconName: "building.2.fill")
+        RecentItem(name: "Apple Developer Academy", address: "BSD Green Office Park, Tangerang", showDivider: false, iconName: "apple.logo")
+    }
+    .padding()
 }

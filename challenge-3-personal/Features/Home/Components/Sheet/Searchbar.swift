@@ -9,19 +9,28 @@ import SwiftUI
 
 struct Searchbar: View {
     @Binding var selectedDetent: PresentationDetent
+    @State private var searchText = ""
     
     var body: some View {
         HStack {
             HStack {
                 HStack {
                     Circle()
-                        .stroke(.orange, lineWidth: 4)
+                        .stroke(.greenBrand, lineWidth: 4)
                         .frame(width: 16, height: 16)
                         
-                    TextField("Search for destination", text: .constant(""))
-                        .foregroundStyle(.ink)
-                        .font(.caption)
-                        .fontWeight(.medium)
+                    ZStack(alignment: .leading) {
+                        if searchText.isEmpty {
+                            Text("Search for destination")
+                                .foregroundStyle(.ink.opacity(0.8))
+                                .font(.caption)
+                                .bold()
+                        }
+                        TextField("", text: $searchText)
+                            .foregroundStyle(.ink)
+                            .font(.caption)
+                            .bold()
+                    }
                 }
                 Image(systemName: "magnifyingglass")
                     .foregroundStyle(.ink)

@@ -12,26 +12,28 @@ struct HitchRequestContainer: View {
     let onBack: () -> Void
     
     var body: some View {
-        VStack(spacing: 20) {
+        VStack(spacing: 0) {
             HStack {
                 Button("Back", systemImage: "chevron.left", action: onBack)
                     .labelStyle(.iconOnly)
                     .font(.title3)
-                    .foregroundStyle(.greenBrand)
+                    .foregroundStyle(.ink)
                     .frame(width: 44, height: 44)
                     .clipShape(.circle)
                     .glassEffect()
-                    
                 
                 Spacer()
                 Text("Hitch Request")
-                    .fontWeight(.semibold)
-                    .foregroundStyle(.greenBrand)
+                    .bold()
+                    .foregroundStyle(.ink)
                 Spacer()
                 Circle().frame(width: 44, height: 44).opacity(0)
             }
-            .padding(.horizontal, 16).padding(.top,24)
-            ScrollView{
+            .padding(.horizontal, 16)
+            .padding(.top, 24)
+            .padding(.bottom, 20)
+            
+            ScrollView {
                 switch state {
                 case .empty:
                     Text("Empty")
@@ -52,9 +54,8 @@ struct HitchRequestContainer: View {
                     HitchRequestRejectedCard(data: data)
                 }
             }
-            
+            .scrollBounceBehavior(.basedOnSize)
         }
-        .frame(maxHeight: .infinity, alignment: .top)
     }
 }
 

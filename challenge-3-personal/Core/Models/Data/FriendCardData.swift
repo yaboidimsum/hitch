@@ -11,15 +11,15 @@ struct FriendCardData: Identifiable {
     let id = UUID()
     let name: String
     let distance: String
-    let imageName: String
+    let imageUrl: String
     
     init(
         name: String,
         distance: String,
-        imageName: String = "person.crop.circle"
+        imageUrl: String = "https://api.dicebear.com/10.x/lorelei/svg?seed=Felix"
     ) {
         self.name = name
         self.distance = distance
-        self.imageName = imageName
+        self.imageUrl = imageUrl
     }
 }

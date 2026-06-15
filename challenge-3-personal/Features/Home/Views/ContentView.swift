@@ -14,7 +14,7 @@ enum SheetContent {
 struct ContentView: View {
     @State private var greeting = Greeting(message: "Hello, world!", recipient: "world")
     @State private var showHitchSheet = true
-    @State private var selectedDetent: PresentationDetent = .height(70)
+    @State private var selectedDetent: PresentationDetent = .fraction(0.15)
     @State private var model = MapModel()
     @State private var path = NavigationPath()
     @State private var sheetContent: SheetContent = .hitch
@@ -87,7 +87,7 @@ struct ContentView: View {
                 case .hitch:
                     HitchSheet(selectedDetent: $selectedDetent)
                         .presentationDetents(
-                            [.height(70), .medium, .large],
+                            [.fraction(0.10), .medium, .large],
                             selection: $selectedDetent
                         )
                         .interactiveDismissDisabled()
@@ -99,14 +99,15 @@ struct ContentView: View {
                         amountSign: .positive,
                         fromLocation: "Autograph Tower Level 52",
                         toLocation: "McDonald's Salemba Raya",
-                        status: .rideRequest
+                        status: .rideRequest,
+                        profileImage: "https://api.dicebear.com/10.x/lorelei/png?seed=Nadya"
                     ))) {
                         withAnimation {
                             sheetContent = .hitch
                         }
                     }
                     .presentationDetents(
-                        [.height(70),.medium, .large],
+                        [.fraction(0.10), .medium, .large],
                         selection: $selectedDetent
                     )
                     .interactiveDismissDisabled()

@@ -15,6 +15,7 @@ struct HitchCardData: Identifiable {
     let status: RideStatus
     let amount: Int
     let amountSign: AmountSign
+    let imageUrl: String
     
     init(
         name: String,
@@ -22,7 +23,8 @@ struct HitchCardData: Identifiable {
         destination: String,
         status: RideStatus,
         amount: Int,
-        amountSign: AmountSign
+        amountSign: AmountSign,
+        imageUrl: String = "https://api.dicebear.com/10.x/lorelei/png?seed=Kanye"
     ) {
         self.name = name
         self.occupation = occupation
@@ -30,5 +32,6 @@ struct HitchCardData: Identifiable {
         self.status = status
         self.amount = amount
         self.amountSign = amountSign
+        self.imageUrl = imageUrl
     }
 }

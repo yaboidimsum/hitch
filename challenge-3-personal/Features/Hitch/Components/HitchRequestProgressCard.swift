@@ -15,12 +15,16 @@ struct HitchRequestProgressCard: View {
             Text("Go pick em!").fontWeight(.semibold)
             
             HStack(alignment: .center, spacing: 16) {
-                Image(systemName: data.profileImage)
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 64, height: 64)
-                    .clipShape(.circle)
-                    .foregroundStyle(.black)
+                AsyncImage(url: URL(string: data.profileImage)) { image in
+                    image
+                        .resizable()
+                        .scaledToFill()
+                } placeholder: {
+                    Circle()
+                        .fill(.gray.opacity(0.3))
+                }
+                .frame(width: 64, height: 64)
+                .clipShape(.circle)
                 
                 VStack(alignment: .leading, spacing: 4) {
                     Text("\(data.amountSign.prefix)Rp\(data.amount, format: .number)")
@@ -30,7 +34,7 @@ struct HitchRequestProgressCard: View {
                     
                     Text(data.name)
                         .fontWeight(.semibold)
-                        .foregroundStyle(.mutedSlate)
+                        .foregroundStyle(.ink.opacity(0.8))
                         .font(.footnote)
                     
                     VStack(alignment: .leading, spacing: 4) {

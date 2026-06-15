@@ -23,5 +23,5 @@ struct HitchSheet: View {
 }
 
 #Preview {
-    HitchSheet(selectedDetent: .constant(.height(70)))
+    HitchSheet(selectedDetent: .constant(.fraction(0.15)))
 }

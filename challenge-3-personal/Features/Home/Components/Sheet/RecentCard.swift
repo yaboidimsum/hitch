@@ -10,21 +10,21 @@ struct RecentCard: View {
         VStack(alignment: .leading, spacing: 12){
             HStack(spacing: 8) {
                 Text("Recents")
-                    .font(.headline).foregroundStyle(.greenBrand)
+                    .font(.headline).foregroundStyle(.ink)
                 Image(systemName: "chevron.right")
-                    .foregroundStyle(.greenBrand)
+                    .foregroundStyle(.ink)
             }.fontWeight(.semibold)
             VStack {
-                RecentItem(name: "Little Olie!", address: "Bendungan Hilir, South Jakarta", showDivider: true)
+                RecentItem(name: "Autograph Tower", address: "Thamrin, Jakarta Pusat", showDivider: true, iconName: "building.2.fill")
                     .padding(.horizontal, 20)
                     .padding(.top, 16)
                     .padding(.bottom, 8)
 
-                RecentItem(name: "Little Olie!", address: "Bendungan Hilir, South Jakarta", showDivider: true)
+                RecentItem(name: "Grand Indonesia", address: "Menteng, Jakarta Pusat", showDivider: true, iconName: "bag.fill")
                     .padding(.horizontal, 20)
                     .padding(.vertical, 8)
 
-                RecentItem(name: "Little Olie!", address: "Bendungan Hilir, South Jakarta", showDivider: false)
+                RecentItem(name: "Gelora Bung Karno", address: "Senayan, Jakarta Pusat", showDivider: false, iconName: "sportscourt.fill")
                     .padding(.horizontal, 20)
                     .padding(.top, 8)
                     .padding(.bottom, 16)

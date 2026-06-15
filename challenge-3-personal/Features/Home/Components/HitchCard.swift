@@ -14,25 +14,30 @@ struct HitchCard: View {
     let status: RideStatus
     let amount: Int
     let amountSign: AmountSign
+    let imageUrl: String
     
     var body: some View {
         HStack(alignment: .top) {
             HStack(alignment: .center) {
-                Image(systemName: "person")
-                    .resizable()
-                    .scaledToFill()
-                    .frame(width: 64, height: 64)
-                    .clipShape(.circle)
-                    .foregroundStyle(.black)
+                AsyncImage(url: URL(string: imageUrl)) { image in
+                    image
+                        .resizable()
+                        .scaledToFill()
+                } placeholder: {
+                    Circle()
+                        .fill(.gray.opacity(0.3))
+                }
+                .frame(width: 64, height: 64)
+                .clipShape(.circle)
                 
                 VStack(alignment: .leading) {
                     VStack(alignment: .leading) {
                         Text("\(name) (\(occupation))")
                             .fontWeight(.medium)
-                            .foregroundStyle(.mutedSlate)
+                            .foregroundStyle(.ink.opacity(0.8))
                         Text(destination)
                             .fontWeight(.semibold)
-                            .foregroundStyle(.greenBrand)
+                            .foregroundStyle(.ink)
                     }
                     .font(.footnote)
                     
@@ -44,6 +49,7 @@ struct HitchCard: View {
                         .clipShape(.rect(cornerRadius: 999))
                         .fontWeight(.semibold)
                         .font(.caption2)
+                        .glassEffect()
                 }
             }
             
@@ -55,7 +61,7 @@ struct HitchCard: View {
                 Text("\(amountSign.prefix)Rp\(amount, format: .number)")
                     .font(.caption2)
                     .fontWeight(.medium)
-                    .foregroundStyle(amountSign == .positive ? .greenBrand : .mutedSlate)
+                    .foregroundStyle(amountSign == .positive ? .greenBrand : .ink.opacity(0.8))
             }
         }
         .padding(.horizontal, 16)
@@ -72,7 +78,8 @@ struct HitchCard: View {
             destination: "McDonald's Salemba Raya",
             status: .rideRequest,
             amount: 20000,
-            amountSign: .positive
+            amountSign: .positive,
+            imageUrl: "https://api.dicebear.com/10.x/lorelei/png?seed=Kanye"
         )
         
         HitchCard(
@@ -81,7 +88,8 @@ struct HitchCard: View {
             destination: "Central Park Mall",
             status: .cancelled,
             amount: 20000,
-            amountSign: .negative
+            amountSign: .negative,
+            imageUrl: "https://api.dicebear.com/10.x/lorelei/png?seed=John"
         )
         
         HitchCard(
@@ -90,7 +98,8 @@ struct HitchCard: View {
             destination: "Grand Indonesia",
             status: .inProgress,
             amount: 20000,
-            amountSign: .neutral
+            amountSign: .neutral,
+            imageUrl: "https://api.dicebear.com/10.x/lorelei/png?seed=Jane"
         )
     }
     .padding()

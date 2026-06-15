@@ -15,7 +15,7 @@ struct WeatherActivity: View{
             Text("27°C").font(Font.system(.body, design: .rounded))
         }
         .padding(8)
-        .background(.white)
+//        .background(.white)
         .clipShape(.rect(cornerRadius: 999))
         .glassEffect()
     }

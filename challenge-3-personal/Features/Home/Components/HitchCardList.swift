@@ -21,7 +21,8 @@ struct HitchCardList: View {
                     destination: item.destination,
                     status: item.status,
                     amount: item.amount,
-                    amountSign: item.amountSign
+                    amountSign: item.amountSign,
+                    imageUrl: item.imageUrl
                 )
                 .padding(.horizontal, 16)
                 .padding(.vertical,12)
@@ -45,7 +46,8 @@ struct HitchCardList: View {
                 destination: "McDonald's Salemba Raya",
                 status: .inProgress,
                 amount: 20000,
-                amountSign: .positive
+                amountSign: .positive,
+                imageUrl: "https://api.dicebear.com/10.x/lorelei/png?seed=Kanye"
             ),
             HitchCardData(
                 name: "John Doe",
@@ -53,7 +55,8 @@ struct HitchCardList: View {
                 destination: "Central Park Mall",
                 status: .cancelled,
                 amount: 20000,
-                amountSign: .negative
+                amountSign: .negative,
+                imageUrl: "https://api.dicebear.com/10.x/lorelei/png?seed=John"
             ),
             HitchCardData(
                 name: "Jane Smith",
@@ -61,7 +64,8 @@ struct HitchCardList: View {
                 destination: "Grand Indonesia",
                 status: .success,
                 amount: 20000,
-                amountSign: .neutral
+                amountSign: .neutral,
+                imageUrl: "https://api.dicebear.com/10.x/lorelei/png?seed=Jane"
             )
         ]
     )
