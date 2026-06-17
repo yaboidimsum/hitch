@@ -3,6 +3,8 @@ import SwiftUI
 struct RequestSearchLocation: View {
     @Environment(AppStore.self) var store
     let onDismiss: () -> Void
+    let onPlaceSelected: (Place) -> Void
+    @State private var selectedPlace: Place?
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -16,46 +18,49 @@ struct RequestSearchLocation: View {
                     .glassEffect()
                 
                 Spacer()
-                Text("Hitch Request")
+                Text("Search destination")
                     .bold()
                     .foregroundStyle(.ink)
                 Spacer()
-                NavigationLink(value: SearchDestination.pickFriend) {
-                    Image(systemName: "checkmark")
-                        .font(.title3)
-                        .foregroundStyle(.white)
-                        .frame(width: 44, height: 44)
-                        .background(.greenBrand)
-                        .clipShape(.circle)
-                        .glassEffect()
-                }
+                Circle().frame(width: 44, height: 44).opacity(0)
             }
             .padding(.horizontal, 16)
             .padding(.top, 24)
             .padding(.bottom, 20)
             
-            ScrollView {
+//            ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
-                    DestinationCard()
+                    DestinationCard(
+                        selectedPlace: selectedPlace
+                    )
                     MapButton()
                 }
-                .padding(.horizontal, 16)
+                .padding(.horizontal, 16).padding(.bottom,16)
                 
-                Rectangle()
-                    .fill(.mutedSlate.opacity(0.2))
-                    .frame(height: 1)
+//                Rectangle()
+//                    .fill(.mutedSlate.opacity(0.2))
+//                    .frame(height: 1)
                 
-                ForEach(store.recentPlaces) { place in
+                List(store.recentPlaces) { place in
                     LocationCard(place: place)
+                        .onTapGesture {
+                            selectedPlace = place
+                            onPlaceSelected(place)
+                        }
                 }
-            }
+                .listStyle(.plain)
+//            }
         }
     }
 }
 
 #Preview {
+    let store = AppStore.mock()
     NavigationStack {
-        RequestSearchLocation(onDismiss: {})
-            .environment(AppStore.mock())
+        RequestSearchLocation(
+            onDismiss: {}, onPlaceSelected: {_ in },
+            
+        )
+        .environment(store)
     }
 }

@@ -1,7 +1,7 @@
 import Foundation
 import MapKit
 
-struct Place: Identifiable {
+struct Place: Identifiable, Hashable {
     let id: UUID
     let name: String
     let address: String
@@ -24,4 +24,13 @@ struct Place: Identifiable {
         self.coordinate = coordinate
         self.visitedAt = visitedAt
     }
+    
+    // Hashable conformance
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(id)
+        }
+        
+        static func == (lhs: Place, rhs: Place) -> Bool {
+            lhs.id == rhs.id
+        }
 }

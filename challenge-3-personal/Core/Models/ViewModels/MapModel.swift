@@ -16,6 +16,8 @@ final class MapModel {
     private let citySpan = MKCoordinateSpan(latitudeDelta: 0.15, longitudeDelta: 0.15)
     
     var position: MapCameraPosition
+    var userLocation: CLLocationCoordinate2D?
+    private let manager = CLLocationManager()
     
     init() {
         position = .region(

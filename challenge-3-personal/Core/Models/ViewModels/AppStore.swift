@@ -9,6 +9,7 @@ final class AppStore {
     var recentPlaces: [Place]
     var rides: [Ride]
     var weather: WeatherData
+    var locationService: LocationService
     
     init(
         currentUser: User,
@@ -19,13 +20,15 @@ final class AppStore {
             iconName: "sun.max.fill",
             temperature: 27,
             tempUnit: "°C"
-        )
+        ),
+        locationService: LocationService? = nil
     ) {
         self.currentUser = currentUser
         self.friends = friends
         self.recentPlaces = recentPlaces
         self.rides = rides
         self.weather = weather
+        self.locationService = locationService ?? LocationService()
     }
     
     var activeRides: [Ride] {
@@ -133,7 +136,8 @@ extension AppStore {
             friends: friends,
             recentPlaces: places.prefix(3).map { $0 },
             rides: rides,
-            weather: WeatherData(iconName: "sun.max.fill", temperature: 27)
+            weather: WeatherData(iconName: "sun.max.fill", temperature: 27),
+            locationService: LocationService()
         )
     }
 }

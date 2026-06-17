@@ -8,6 +8,11 @@
 import SwiftUI
 
 struct RequestSentSheet: View {
+    
+    let selectedPlace: Place
+    let selectedfriend: User
+    let onConfirm: ()->Void
+    
     var body: some View {
         VStack(alignment: .center, spacing: 20) {
             Image(systemName: "checkmark.circle.fill")
@@ -16,10 +21,12 @@ struct RequestSentSheet: View {
                 .frame(width: 72, height: 72)
                 .foregroundStyle(.greenBrand)
             
-            Text("Your request has been sent! An invoice will be sent if your friend approves the request")
+            Text(
+                "Your request has been sent to \(selectedfriend.name) ! An invoice will be sent if your friend approves the request"
+            )
                 .font(.subheadline)
                 .fontWeight(.semibold)
-                .foregroundStyle(.greenBrand)
+                .foregroundStyle(.ink)
                 .multilineTextAlignment(.center)
             
             VStack(spacing:8){
@@ -31,7 +38,7 @@ struct RequestSentSheet: View {
                     .background(.greenBrand)
                     .clipShape(.rect(cornerRadius: 999))
                     .glassEffect()
-                Button("Close", action: {})
+                Button("Close", action: onConfirm)
                     .font(.headline)
                     .foregroundStyle(.greenBrand)
                     .frame(maxWidth: .infinity)
@@ -41,10 +48,17 @@ struct RequestSentSheet: View {
                     .glassEffect()
             }
         }
-        .padding(40)
+        .padding(.vertical,16)
+        .padding(.horizontal,12)
     }
 }
 
 #Preview {
-    RequestSentSheet()
+    let store = AppStore.mock()
+    RequestSentSheet(
+        selectedPlace: store.recentPlaces[0],
+        selectedfriend: store.friends[0],
+        onConfirm: {}
+    )
+    .environment(store)
 }

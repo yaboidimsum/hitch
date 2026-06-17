@@ -1,40 +1,55 @@
 import SwiftUI
 
-enum SearchDestination: Hashable {
-    case pickFriend
-    case receipt
-}
-
 struct SearchFlow: View {
-    @Environment(AppStore.self) var store
+    @Bindable private var model = SearchFlowModel()
+    @Environment(AppStore.self) private var store
     @Binding var sheetContent: SheetContent
-    @State private var path = NavigationPath()
     
     var body: some View {
-        NavigationStack(path: $path) {
+        NavigationStack(path: $model.path) {
             RequestSearchLocation(
-                onDismiss: { withAnimation{
-                    sheetContent = .hitch} }
+                onDismiss: {
+                    withAnimation {
+                        sheetContent = .hitch
+                    }
+                },
+                onPlaceSelected: { place in
+                    model.selectPlace(place)
+                }
             )
             .navigationBarHidden(true)
-            .navigationDestination(for: SearchDestination.self) { destination in
-                switch destination {
-                case .pickFriend:
+            .navigationDestination(for: SearchStep.self) { step in
+                switch step {
+                case .location:
+                    EmptyView()
+                case .pickFriend(let place):
                     RequestPickFriend(
-                        onBack: { path.removeLast() },
-                        onConfirm: { path.append(SearchDestination.receipt) }
+                        selectedPlace: place,
+                        onFriendSelected: { friend in
+                            model.selectFriend(friend)
+                        }, onBack: {model.path.removeLast()}
                     )
                     .navigationBarHidden(true)
-                case .receipt:
+                case .receipt(let place, let friend):
                     RequestReceipt(
-                        onBack: { path.removeLast() },
-                        onDone: {
-                            path.removeLast(path.count)
+                        selectedPlace: place,
+                        selectedFriend: friend,
+                        onBack: {
+                            model.path.removeLast()
+                        },
+                        onSend: {
+                            model.sendRequest()
+                        }
+                    ).navigationBarHidden(true)
+                case .sent(let place, let friend):
+                    RequestSentSheet(
+                        selectedPlace: place, selectedfriend: friend, onConfirm: {
+                            model.reset()
                             withAnimation{
                                 sheetContent = .hitch
                             }
-                            
                         }
+                        
                     )
                     .navigationBarHidden(true)
                 }

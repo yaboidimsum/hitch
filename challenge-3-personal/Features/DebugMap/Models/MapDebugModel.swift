@@ -10,18 +10,20 @@ import SwiftUI
 @Observable
 final class MapDebugModel {
     var position: MapCameraPosition
-    var userLocation: CLLocationCoordinate2D?
     var route: MKRoute?
     var routeDistance: Double?
     var isCalculatingRoute = false
-    var authorizationStatus: CLAuthorizationStatus = .notDetermined
+    var currentUserPlaceName: String?
+    var searchQuery: String = ""
+    var isSearching = false
+    var searchResultName: String?
+    
+    private let geocoder = CLGeocoder()
 
     let pointA = CLLocationCoordinate2D(latitude: -6.2088, longitude: 106.8456)
-    let pointB = CLLocationCoordinate2D(latitude: -6.1751, longitude: 106.8650)
+    var pointB = CLLocationCoordinate2D(latitude: -6.1751, longitude: 106.8650)
 
-    private let manager = CLLocationManager()
     private let regionSpan = MKCoordinateSpan(latitudeDelta: 0.05, longitudeDelta: 0.05)
-    private let locationDelegate: LocationDelegate
 
     init() {
         position = .region(
@@ -30,44 +32,10 @@ final class MapDebugModel {
                 span: regionSpan
             )
         )
-        locationDelegate = LocationDelegate()
-        locationDelegate.onLocationUpdate = { [weak self] coordinate in
-            Task { @MainActor in
-                self?.userLocation = coordinate
-            }
-        }
-        locationDelegate.onAuthorizationChange = { [weak self] status in
-            Task { @MainActor in
-                self?.authorizationStatus = status
-                #if os(iOS)
-                if status == .authorizedWhenInUse || status == .authorizedAlways {
-                    self?.manager.startUpdatingLocation()
-                }
-                #else
-                if status == .authorizedAlways {
-                    self?.manager.startUpdatingLocation()
-                }
-                #endif
-            }
-        }
-        manager.delegate = locationDelegate
-        requestAuthorization()
     }
 
-    func requestAuthorization() {
-        manager.requestWhenInUseAuthorization()
-    }
-
-    func startTrackingLocation() {
-        manager.startUpdatingLocation()
-    }
-
-    func stopTrackingLocation() {
-        manager.stopUpdatingLocation()
-    }
-
-    func centerOnUser() {
-        guard let userLocation else { return }
+    func centerOnUser(using locationService: LocationService) {
+        guard let userLocation = locationService.userLocation else { return }
         withAnimation(.smooth(duration: 0.5)) {
             position = .region(
                 MKCoordinateRegion(
@@ -78,16 +46,25 @@ final class MapDebugModel {
         }
     }
 
-    func calculateRoute() async {
+    func calculateRouteAB() async {
+        await calculateRoute(from: pointA, to: pointB)
+    }
+
+    func calculateRouteFromUser(using locationService: LocationService) async {
+        guard let userLocation = locationService.userLocation else { return }
+        await calculateRoute(from: userLocation, to: pointB)
+    }
+
+    private func calculateRoute(from sourceCoordinate: CLLocationCoordinate2D, to destinationCoordinate: CLLocationCoordinate2D) async {
         isCalculatingRoute = true
         defer { isCalculatingRoute = false }
 
         let source = MKMapItem(
-            location: CLLocation(latitude: pointA.latitude, longitude: pointA.longitude),
+            location: CLLocation(latitude: sourceCoordinate.latitude, longitude: sourceCoordinate.longitude),
             address: nil
         )
         let destination = MKMapItem(
-            location: CLLocation(latitude: pointB.latitude, longitude: pointB.longitude),
+            location: CLLocation(latitude: destinationCoordinate.latitude, longitude: destinationCoordinate.longitude),
             address: nil
         )
 
@@ -111,18 +88,59 @@ final class MapDebugModel {
         route = nil
         routeDistance = nil
     }
-}
-
-final class LocationDelegate: NSObject, CLLocationManagerDelegate {
-    var onLocationUpdate: ((CLLocationCoordinate2D) -> Void)?
-    var onAuthorizationChange: ((CLAuthorizationStatus) -> Void)?
-
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = locations.last else { return }
-        onLocationUpdate?(location.coordinate)
+    
+    func reverseGeocodeUserLocation(using locationService: LocationService) async {
+        guard let coordinate = locationService.userLocation else {
+            currentUserPlaceName = nil
+            return
+        }
+        let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+        do {
+            let placemarks = try await geocoder.reverseGeocodeLocation(location)
+            if let placemark = placemarks.first {
+                currentUserPlaceName = [
+                    placemark.subThoroughfare,
+                    placemark.thoroughfare,
+                    placemark.locality,
+                    placemark.country
+                ].compactMap { $0 }.joined(separator: ", ")
+            }
+        } catch {
+            currentUserPlaceName = "Unknown location"
+        }
     }
-
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
-        onAuthorizationChange?(status)
+    
+    func searchForDestination() async {
+        guard !searchQuery.isEmpty else { return }
+        isSearching = true
+        defer { isSearching = false }
+        
+        let request = MKLocalSearch.Request()
+        request.naturalLanguageQuery = searchQuery
+        request.region = MKCoordinateRegion(
+            center: pointA,
+            latitudinalMeters: 50000,
+            longitudinalMeters: 50000
+        )
+        
+        do {
+            let search = MKLocalSearch(request: request)
+            let response = try await search.start()
+            if let item = response.mapItems.first {
+                let coordinate = item.placemark.coordinate
+                pointB = coordinate
+                searchResultName = item.name
+                withAnimation(.smooth(duration: 0.5)) {
+                    position = .region(
+                        MKCoordinateRegion(
+                            center: coordinate,
+                            span: regionSpan
+                        )
+                    )
+                }
+            }
+        } catch {
+            searchResultName = nil
+        }
     }
 }

@@ -1,12 +1,6 @@
 import SwiftUI
 import MapKit
 
-enum SheetContent {
-    case hitch
-    case request
-    case search
-}
-
 struct ContentView: View {
     @Environment(AppStore.self) var store
     @State private var showHitchSheet = true
@@ -25,7 +19,9 @@ struct ContentView: View {
     var body: some View {
         NavigationStack(path: $path) {
             ZStack(alignment: .topLeading) {
-                Map(position: $model.position)
+                Map(position: $model.position){
+                    UserAnnotation()
+                }
                     .mapStyle(.standard)
                     .mapControls {
                         MapUserLocationButton()

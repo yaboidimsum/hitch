@@ -1,7 +1,7 @@
 import Foundation
 import MapKit
 
-struct User: Identifiable {
+struct User: Identifiable, Hashable {
     let id: UUID
     let name: String
     let avatarURL: String
@@ -21,4 +21,13 @@ struct User: Identifiable {
         self.location = location
         self.isAvailable = isAvailable
     }
+    
+    // Hashable conformance
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(id)
+        }
+        
+        static func == (lhs: User, rhs: User) -> Bool {
+            lhs.id == rhs.id
+        }
 }

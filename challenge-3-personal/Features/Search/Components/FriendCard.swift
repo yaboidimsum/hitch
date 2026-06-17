@@ -28,7 +28,7 @@ struct FriendCard: View {
                 .bold()
         }
         .padding(.horizontal, 16)
-        .padding(.vertical, 12)
+//        .padding(.vertical, 12)
     }
 }
 

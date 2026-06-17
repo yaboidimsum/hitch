@@ -2,8 +2,10 @@ import SwiftUI
 
 struct RequestReceipt: View {
     @Environment(AppStore.self) var store
-    let onBack: () -> Void
-    let onDone: () -> Void
+    let selectedPlace: Place
+    let selectedFriend: User
+    let onBack: ()->Void
+    let onSend: () -> Void
     
     var body: some View {
         VStack(spacing: 0) {
@@ -30,16 +32,14 @@ struct RequestReceipt: View {
             ScrollView {
                 VStack(spacing: 20) {
                     VStack(spacing: 12) {
-                        DestinationCard()
+                        DestinationCard(selectedPlace: selectedPlace)
                             .padding(.vertical, 12)
                             .padding(.horizontal, 16)
                         Rectangle()
                             .fill(.mutedSlate.opacity(0.2))
                             .frame(height: 1)
                         
-                        if let firstFriend = store.friends.first {
-                            FriendCard(friend: firstFriend)
-                        }
+                        FriendCard(friend: selectedFriend)
                     }
                     
                     VStack {
@@ -102,7 +102,7 @@ struct RequestReceipt: View {
                         .frame(height: 1)
                     
                     VStack {
-                        Button("Send Request", action: onDone)
+                        Button("Send Request", action: onSend)
                             .font(.headline)
                             .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)
@@ -121,8 +121,13 @@ struct RequestReceipt: View {
 }
 
 #Preview {
+    let store = AppStore.mock()
     NavigationStack {
-        RequestReceipt(onBack: {}, onDone: {})
-            .environment(AppStore.mock())
+        RequestReceipt(
+            selectedPlace: store.recentPlaces[0],
+            selectedFriend: store.friends[0],
+            onBack: {}, onSend: {}
+        )
+        .environment(store)
     }
 }

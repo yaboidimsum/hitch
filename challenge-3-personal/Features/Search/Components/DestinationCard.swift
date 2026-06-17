@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct DestinationCard: View {
-    @State private var destination = ""
-    @State private var searchText = ""
+//    let currentLocation: String?
+    let selectedPlace: Place?
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -17,7 +17,7 @@ struct DestinationCard: View {
                 Image(systemName: "mappin.circle.fill")
                     .font(.caption)
                     .foregroundStyle(.greenBrand)
-                Text("Autograph Tower Level 52")
+                Text("Autograph Tower level 52")
                     .font(.caption)
                     .bold()
                     .foregroundStyle(.ink)
@@ -32,18 +32,10 @@ struct DestinationCard: View {
                 Image(systemName: "flag.pattern.checkered.circle.fill")
                     .font(.caption)
                     .foregroundStyle(.greenBrand)
-                ZStack(alignment: .leading) {
-                    if searchText.isEmpty {
-                        Text("Search for destination")
-                            .foregroundStyle(.ink.opacity(0.8))
-                            .font(.caption)
-                            .fontWeight(.medium)
-                    }
-                    TextField("", text: $searchText)
-                        .foregroundStyle(.ink)
-                        .font(.caption)
-                        .bold()
-                }
+                Text(selectedPlace?.name ?? "Select a destination")
+                    .font(.caption)
+                    .foregroundStyle(.ink.opacity(0.8))
+                    .fontWeight(.medium)
             }
         }
         .padding(.vertical, 12)
@@ -54,5 +46,6 @@ struct DestinationCard: View {
 }
 
 #Preview {
-    DestinationCard()
+    let store = AppStore.mock()
+    DestinationCard(selectedPlace: store.recentPlaces[0])
 }

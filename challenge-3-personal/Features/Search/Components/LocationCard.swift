@@ -27,11 +27,11 @@ struct LocationCard: View {
                 .frame(maxWidth: .infinity, alignment: .leading)
             }
             .padding(.horizontal, 16)
-            .padding(.vertical, 20)
+//            .padding(.vertical, 20)
             
-            Rectangle()
-                .fill(.mutedSlate.opacity(0.2))
-                .frame(height: 1)
+//            Rectangle()
+//                .fill(.mutedSlate.opacity(0.2))
+//                .frame(height: 1)
         }
         .frame(maxWidth: .infinity)
     }
