@@ -4,6 +4,7 @@ struct RequestSearchLocation: View {
     @Environment(AppStore.self) var store
     let onDismiss: () -> Void
     let onPlaceSelected: (Place) -> Void
+    let currentLocation: String?
     @State private var selectedPlace: Place?
     
     var body: some View {
@@ -31,6 +32,7 @@ struct RequestSearchLocation: View {
 //            ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
                     DestinationCard(
+                        currentLocation: currentLocation,   // ← From MapModel
                         selectedPlace: selectedPlace
                     )
                     MapButton()
@@ -43,10 +45,14 @@ struct RequestSearchLocation: View {
                 
                 List(store.recentPlaces) { place in
                     LocationCard(place: place)
+                        .frame(maxWidth: .infinity, alignment: .leading).contentShape(
+                            Rectangle()
+                        )
                         .onTapGesture {
                             selectedPlace = place
                             onPlaceSelected(place)
                         }
+                    
                 }
                 .listStyle(.plain)
 //            }
@@ -58,8 +64,9 @@ struct RequestSearchLocation: View {
     let store = AppStore.mock()
     NavigationStack {
         RequestSearchLocation(
-            onDismiss: {}, onPlaceSelected: {_ in },
-            
+            onDismiss: {},
+            onPlaceSelected: { _ in },
+            currentLocation: "Tes"
         )
         .environment(store)
     }

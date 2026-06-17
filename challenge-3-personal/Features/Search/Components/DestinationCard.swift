@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct DestinationCard: View {
-//    let currentLocation: String?
+    let currentLocation: String?
     let selectedPlace: Place?
     
     var body: some View {
@@ -17,7 +17,7 @@ struct DestinationCard: View {
                 Image(systemName: "mappin.circle.fill")
                     .font(.caption)
                     .foregroundStyle(.greenBrand)
-                Text("Autograph Tower level 52")
+                Text(currentLocation ?? "Locating")
                     .font(.caption)
                     .bold()
                     .foregroundStyle(.ink)
@@ -47,5 +47,8 @@ struct DestinationCard: View {
 
 #Preview {
     let store = AppStore.mock()
-    DestinationCard(selectedPlace: store.recentPlaces[0])
+    DestinationCard(
+        currentLocation: "Autograph Tower level 52",
+        selectedPlace: store.recentPlaces[0]
+    )
 }

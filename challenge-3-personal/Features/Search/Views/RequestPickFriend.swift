@@ -2,9 +2,11 @@ import SwiftUI
 
 struct RequestPickFriend: View {
     @Environment(AppStore.self) var store
+    @Bindable private var model = SearchFlowModel()
     let selectedPlace: Place
     let onFriendSelected: (User) -> Void
     let onBack: () -> Void
+    let currentLocation: String?
     
     var body: some View {
         VStack(spacing: 0) {
@@ -32,7 +34,10 @@ struct RequestPickFriend: View {
             
                 VStack(spacing: 20) {
                     VStack {
-                        DestinationCard(selectedPlace: selectedPlace)
+                        DestinationCard(
+                            currentLocation: currentLocation,   // ← From MapModel
+                            selectedPlace: selectedPlace
+                        )
                             .padding(.vertical, 12)
                             .padding(.horizontal, 16)
                         Rectangle()
@@ -51,6 +56,9 @@ struct RequestPickFriend: View {
             
             List(store.friends) { friend in
                 FriendCard(friend: friend)
+                    .frame(maxWidth: .infinity, alignment: .leading).contentShape(
+                        Rectangle()
+                    )
                     .onTapGesture {
                         onFriendSelected(friend)
                     }
@@ -65,7 +73,7 @@ struct RequestPickFriend: View {
     NavigationStack {
         RequestPickFriend(
             selectedPlace: store.recentPlaces[0],
-            onFriendSelected: { _ in }, onBack: {}
+            onFriendSelected: { _ in }, onBack: {}, currentLocation: "Tes"
         )
         .environment(store)
     }

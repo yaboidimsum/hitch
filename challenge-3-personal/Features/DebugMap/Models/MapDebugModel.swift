@@ -33,6 +33,7 @@ final class MapDebugModel {
             )
         )
     }
+    
 
     func centerOnUser(using locationService: LocationService) {
         guard let userLocation = locationService.userLocation else { return }

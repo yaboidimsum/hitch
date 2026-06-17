@@ -6,6 +6,28 @@ struct RequestReceipt: View {
     let selectedFriend: User
     let onBack: ()->Void
     let onSend: () -> Void
+    let currentLocation: String?
+    let distance: Double?
+    
+    private var routeKm: Double? {
+        guard let distance else { return nil }
+        return distance / 1000
+    }
+    
+    private var routePrice: Int? {
+        guard let km = routeKm else { return nil }
+        return Int((km * 7000 / 1000).rounded() * 1000)
+    }
+    
+    private var tax: Int? {
+        guard let price = routePrice else { return nil }
+        return Int((Double(price) * 0.11).rounded())
+    }
+    
+    private var subtotal: Int? {
+        guard let price = routePrice, let tax = tax else { return nil }
+        return price + tax
+    }
     
     var body: some View {
         VStack(spacing: 0) {
@@ -32,7 +54,10 @@ struct RequestReceipt: View {
             ScrollView {
                 VStack(spacing: 20) {
                     VStack(spacing: 12) {
-                        DestinationCard(selectedPlace: selectedPlace)
+                        DestinationCard(
+                            currentLocation: currentLocation,
+                            selectedPlace: selectedPlace
+                        )
                             .padding(.vertical, 12)
                             .padding(.horizontal, 16)
                         Rectangle()
@@ -42,26 +67,51 @@ struct RequestReceipt: View {
                         FriendCard(friend: selectedFriend)
                     }
                     
+                    if let km = routeKm {
+                        HStack {
+                            Text("Distance")
+                                .font(.caption)
+                                .fontWeight(.semibold)
+                            Spacer()
+                            Text("\(km, format: .number.precision(.fractionLength(2))) km")
+                                .font(.caption)
+                                .fontWeight(.medium)
+                        }
+                        .padding(.horizontal, 16)
+                    }
+                    
                     VStack {
                         HStack {
                             Text("Price")
                                 .font(.caption)
                                 .fontWeight(.semibold)
                             Spacer()
-                            Text("Rp20.000")
-                                .font(.caption)
-                                .fontWeight(.medium)
+                            if let price = routePrice {
+                                Text("Rp\(price, format: .number.precision(.fractionLength(0)))")
+                                    .font(.caption)
+                                    .fontWeight(.medium)
+                            } else {
+                                Text("Calculating...")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
                         }
                         .padding(.horizontal, 16)
                         
                         HStack {
-                            Text("Tax")
+                            Text("Tax (11%)")
                                 .font(.caption)
                                 .fontWeight(.semibold)
                             Spacer()
-                            Text("Rp20.000")
-                                .font(.caption)
-                                .fontWeight(.medium)
+                            if let tax = tax {
+                                Text("Rp\(tax, format: .number.precision(.fractionLength(0)))")
+                                    .font(.caption)
+                                    .fontWeight(.medium)
+                            } else {
+                                Text("Calculating...")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
                         }
                         .padding(.vertical, 12)
                         .padding(.horizontal, 16)
@@ -77,9 +127,15 @@ struct RequestReceipt: View {
                                 .font(.caption)
                                 .fontWeight(.semibold)
                             Spacer()
-                            Text("Rp40.000")
-                                .font(.caption)
-                                .fontWeight(.medium)
+                            if let subtotal = subtotal {
+                                Text("Rp\(subtotal, format: .number.precision(.fractionLength(0)))")
+                                    .font(.caption)
+                                    .fontWeight(.medium)
+                            } else {
+                                Text("Calculating...")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
                         }
                         .padding(.vertical, 12)
                         .padding(.horizontal, 16)
@@ -126,7 +182,10 @@ struct RequestReceipt: View {
         RequestReceipt(
             selectedPlace: store.recentPlaces[0],
             selectedFriend: store.friends[0],
-            onBack: {}, onSend: {}
+            onBack: {},
+            onSend: {},
+            currentLocation: "Test",
+            distance: 3500
         )
         .environment(store)
     }

@@ -7,6 +7,7 @@ class SearchFlowModel {
     var path: [SearchStep] = []
     var selectedPlace: Place?
     var selectedFriend: User?
+    var routeDistance: Double?
 
     
     func selectPlace(_ place: Place) {
