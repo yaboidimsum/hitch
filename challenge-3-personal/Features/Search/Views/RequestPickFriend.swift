@@ -2,7 +2,7 @@ import SwiftUI
 
 struct RequestPickFriend: View {
     @Environment(AppStore.self) var store
-    @Bindable private var model = SearchFlowModel()
+//    @Bindable private var model = SearchFlowModel()
     let selectedPlace: Place
     let onFriendSelected: (User) -> Void
     let onBack: () -> Void

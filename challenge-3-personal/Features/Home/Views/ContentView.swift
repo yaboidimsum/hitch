@@ -33,7 +33,9 @@ struct ContentView: View {
                 Map(position: $model.position) {
                     UserAnnotation()
 //                    Marker("Point A", coordinate: model.pointA)
-                    Marker(model.destinationName ?? "Point B", coordinate: model.pointB)
+                    if (model.destinationName != nil){
+                        Marker(model.destinationName ?? "Point B", coordinate: model.pointB)
+                    }
                     
                     if let route = model.route {
                         MapPolyline(route)
@@ -65,46 +67,6 @@ struct ContentView: View {
                 .padding(.top, 80)
                 .padding(.leading, 342)
 
-                VStack(spacing: 8) {
-                    HStack(spacing: 8) {
-                        Button("Route A→B") {
-                            Task { await model.calculateRouteAB() }
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .tint(.greenBrand)
-
-                        Button("Route User→B") {
-                            Task { await model.calculateRouteFromUser(using: store.locationService) }
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .tint(.blue)
-
-                        Button("Clear") {
-                            model.clearRoute()
-                        }
-                        .buttonStyle(.bordered)
-                    }
-
-                    if let distance = model.routeDistance {
-                        let km = distance / 1000
-                        let price = (km * 7000 / 1000).rounded() * 1000
-                        Text("Distance: \(km, format: .number.precision(.fractionLength(2))) km | Price: Rp\(price, format: .number.precision(.fractionLength(0)))")
-                            .font(.caption)
-                            .bold()
-                            .foregroundStyle(.greenBrand)
-                            .padding(.horizontal, 12)
-                            .padding(.vertical, 6)
-                            .background(.thinMaterial)
-                            .clipShape(.rect(cornerRadius: 8))
-                    }
-
-                    if model.isCalculatingRoute {
-                        ProgressView()
-                            .progressViewStyle(.circular)
-                    }
-                }
-                .padding(.bottom, 120)
-                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .bottom)
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {

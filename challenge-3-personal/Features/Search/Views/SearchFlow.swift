@@ -2,7 +2,7 @@ import SwiftUI
 internal import _LocationEssentials
 
 struct SearchFlow: View {
-    @Bindable private var model = SearchFlowModel()
+    @State private var model = SearchFlowModel()
     @State private var mapModel = MapModel()
     @Environment(AppStore.self) private var store
     @Binding var sheetContent: SheetContent

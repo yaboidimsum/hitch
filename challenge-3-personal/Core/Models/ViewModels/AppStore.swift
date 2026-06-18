@@ -67,7 +67,7 @@ extension AppStore {
         
         let places = [
             Place(name: "Apple Developer Academy @ Binus Tangerang", address: "Jl. Grand Boulevard, BSD Green Office Park 9, BSD City, Sampora, Kec. Cisauk, Kabupaten Tangerang, Banten 15345", iconName: "building.2.fill"),
-            Place(name: "Monumen Nasional", address: "Merdeka Square, Jakarta, Jalan Lapangan Monas, RT.5/RW.2, Gambir, Central Jakarta City, Jakarta 10110", iconName: "building.1.fill"),
+            Place(name: "Monumen Nasional", address: "Merdeka Square, Jakarta, Jalan Lapangan Monas, RT.5/RW.2, Gambir, Central Jakarta City, Jakarta 10110", iconName: "building.2.fill"),
             Place(name: "Gelora Bung Karno", address: "Jl. Pintu Satu Senayan, RT.1/RW.3, Gelora, Kecamatan Tanah Abang, Kota Jakarta Pusat, Daerah Khusus Ibukota Jakarta 10270", iconName: "sportscourt.fill"),
             Place(name: "McDonald's Salemba Raya", address: "Salemba, Jakarta Pusat", iconName: "bag.fill"),
             Place(name: "Central Park Mall", address: "Grogol, Jakarta Barat", iconName: "bag.fill"),

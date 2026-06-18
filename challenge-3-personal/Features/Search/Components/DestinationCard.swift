@@ -32,7 +32,7 @@ struct DestinationCard: View {
                 Image(systemName: "flag.pattern.checkered.circle.fill")
                     .font(.caption)
                     .foregroundStyle(.greenBrand)
-                Text(selectedPlace?.name ?? "Select a destination")
+                Text(selectedPlace?.name ?? "Search for destination")
                     .font(.caption)
                     .foregroundStyle(.ink.opacity(0.8))
                     .fontWeight(.medium)

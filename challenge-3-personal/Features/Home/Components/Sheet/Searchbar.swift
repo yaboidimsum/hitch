@@ -27,12 +27,14 @@ struct Searchbar: View {
                                 .font(.caption)
                                 .bold()
                         }
-                        TextField("", text: $searchText)
-                            .foregroundStyle(.ink)
-                            .font(.caption)
-                            .bold()
+//                        TextField("", text: $searchText)
+//                            .foregroundStyle(.ink)
+//                            .font(.caption)
+//                            .bold()
+                        
                     }
                 }
+                Spacer()
                 Image(systemName: "magnifyingglass")
                     .foregroundStyle(.ink)
                     .padding(.trailing, 10)
