@@ -5,16 +5,7 @@ struct FriendCard: View {
     
     var body: some View {
         HStack(spacing: 12) {
-            AsyncImage(url: URL(string: friend.avatarURL)) { image in
-                image
-                    .resizable()
-                    .scaledToFill()
-            } placeholder: {
-                Circle()
-                    .fill(.gray.opacity(0.3))
-            }
-            .frame(width: 40, height: 40)
-            .clipShape(.circle)
+            UserAvatarView(user: friend, size: 40)
             
             Text(friend.name)
                 .font(.caption)
@@ -23,12 +14,13 @@ struct FriendCard: View {
             
             Spacer()
             
-            Text("Nearby")
-                .font(.caption)
-                .bold()
+            if let phone = friend.phoneNumber {
+                Text(phone)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
         }
         .padding(.horizontal, 16)
-//        .padding(.vertical, 12)
     }
 }
 

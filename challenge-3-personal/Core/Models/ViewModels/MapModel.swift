@@ -1,13 +1,5 @@
-//
-//  MapModel.swift
-//  challenge-3-personal
-//
-//  Created by Dimas Prihady Setyawan on 12/06/26.
-//
-
 import MapKit
 import SwiftUI
-import Observation
 
 @MainActor
 @Observable
@@ -17,15 +9,18 @@ final class MapModel {
     
     var position: MapCameraPosition
     var userLocation: CLLocationCoordinate2D?
-    var currentLocationAddress: String?
+    var currentLocationAddress: String? {
+        get { UserDefaults.standard.string(forKey: "cachedLocationAddress") }
+        set { UserDefaults.standard.set(newValue, forKey: "cachedLocationAddress") }
+    }
     var route: MKRoute?
     var routeDistance: Double?
     var isCalculatingRoute = false
     let pointA = CLLocationCoordinate2D(latitude: -6.2088, longitude: 106.8456)
     var pointB = CLLocationCoordinate2D(latitude: -6.1751, longitude: 106.8650)
     var destinationName: String?
-    private let manager = CLLocationManager()
     private let geocoder = CLGeocoder()
+    private var currentGeocodeTask: Task<Void, Never>?
     
     init() {
         position = .region(
@@ -47,24 +42,34 @@ final class MapModel {
         }
     }
     
-    func reverseGeocode(_ coordinate: CLLocationCoordinate2D?) async {
+    func reverseGeocode(_ coordinate: CLLocationCoordinate2D?) {
+        currentGeocodeTask?.cancel()
+        geocoder.cancelGeocode()
+        
         guard let coordinate else {
             currentLocationAddress = nil
             return
         }
-        let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
-        do {
-            let placemarks = try await geocoder.reverseGeocodeLocation(location)
-            if let placemark = placemarks.first {
-                currentLocationAddress = [
-                    placemark.subThoroughfare,
-                    placemark.thoroughfare,
-                    placemark.locality,
-                    placemark.country
-                ].compactMap { $0 }.joined(separator: ", ")
+        
+        currentGeocodeTask = Task { @MainActor in
+            guard !Task.isCancelled else { return }
+            let location = CLLocation(latitude: coordinate.latitude, longitude: coordinate.longitude)
+            
+            do {
+                let placemarks = try await geocoder.reverseGeocodeLocation(location)
+                guard !Task.isCancelled else { return }
+                if let placemark = placemarks.first {
+                    currentLocationAddress = [
+                        placemark.subThoroughfare,
+                        placemark.thoroughfare,
+                        placemark.locality,
+                        placemark.country
+                    ].compactMap { $0 }.joined(separator: ", ")
+                }
+            } catch {
+                guard !Task.isCancelled else { return }
+                currentLocationAddress = "Unknown location"
             }
-        } catch {
-            currentLocationAddress = "Unknown location"
         }
     }
 

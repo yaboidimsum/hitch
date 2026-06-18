@@ -2,6 +2,7 @@ import SwiftUI
 
 struct RequestReceipt: View {
     @Environment(AppStore.self) var store
+    @Environment(\.openURL) private var openURL
     let selectedPlace: Place
     let selectedFriend: User
     let onBack: ()->Void
@@ -27,6 +28,43 @@ struct RequestReceipt: View {
     private var subtotal: Int? {
         guard let price = routePrice, let tax = tax else { return nil }
         return price + tax
+    }
+
+    private var whatsappURL: URL? {
+        guard let phoneNumber = whatsappPhoneNumber else { return nil }
+        let message = whatsappMessage.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)
+        guard let message else { return nil }
+        return URL(string: "https://wa.me/\(phoneNumber)?text=\(message)")
+    }
+
+    private var whatsappPhoneNumber: String? {
+        let digits = selectedFriend.phoneNumber?.filter(\.isNumber) ?? ""
+        guard !digits.isEmpty else { return nil }
+
+        if digits.hasPrefix("62") {
+            return digits
+        }
+
+        if digits.hasPrefix("0") {
+            return "62" + digits.dropFirst()
+        }
+
+        return digits
+    }
+
+    private var whatsappMessage: String {
+        let origin = currentLocation ?? "Current location"
+        let distanceText = routeKm?.formatted(.number.precision(.fractionLength(2))) ?? "-"
+        let subtotalText = subtotal?.formatted(.number.precision(.fractionLength(0))) ?? "-"
+
+        return """
+        [HITCH GIGS]
+        Hi \(selectedFriend.name), can you pick me up?
+        From: \(origin)
+        To: \(selectedPlace.name)
+        Distance: \(distanceText) km
+        Total: Rp\(subtotalText)
+        """
     }
     
     var body: some View {
@@ -140,17 +178,17 @@ struct RequestReceipt: View {
                         .padding(.vertical, 12)
                         .padding(.horizontal, 16)
                         
-                        HStack {
-                            Text("Payment Method")
-                                .font(.caption)
-                                .fontWeight(.semibold)
-                            Spacer()
-                            Text("Apple Pay")
-                                .font(.caption)
-                                .fontWeight(.medium)
-                        }
-                        .padding(.vertical, 12)
-                        .padding(.horizontal, 16)
+//                        HStack {
+//                            Text("Payment Method")
+//                                .font(.caption)
+//                                .fontWeight(.semibold)
+//                            Spacer()
+//                            Text("Apple Pay")
+//                                .font(.caption)
+//                                .fontWeight(.medium)
+//                        }
+//                        .padding(.vertical, 12)
+//                        .padding(.horizontal, 16)
                     }
                     
                     Rectangle()
@@ -158,7 +196,12 @@ struct RequestReceipt: View {
                         .frame(height: 1)
                     
                     VStack {
-                        Button("Send Request", action: onSend)
+                        Button("Send Request") {
+                            onSend()
+
+                            guard let whatsappURL else { return }
+                            openURL(whatsappURL)
+                        }
                             .font(.headline)
                             .foregroundStyle(.white)
                             .frame(maxWidth: .infinity)

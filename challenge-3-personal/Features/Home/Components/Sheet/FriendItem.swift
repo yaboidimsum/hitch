@@ -5,26 +5,19 @@ struct FriendItem: View {
     
     var body: some View {
         VStack(spacing: 8) {
-            AsyncImage(url: URL(string: friend.avatarURL)) { image in
-                image
-                    .resizable()
-                    .scaledToFill()
-            } placeholder: {
-                Circle()
-                    .fill(.gray.opacity(0.3))
-            }
-            .frame(width: 80, height: 80)
-            .clipShape(.circle)
+            UserAvatarView(user: friend, size: 80)
 
             VStack(spacing: 4) {
                 Text(friend.name)
                     .foregroundStyle(.ink)
                     .font(.caption)
                     .fontWeight(.medium)
-                Text("Nearby")
-                    .foregroundStyle(.ink)
-                    .font(.caption2)
-                    .fontWeight(.medium)
+//                if friend.isAvailable {
+//                    Text("Nearby")
+//                        .foregroundStyle(.greenBrand)
+//                        .font(.caption2)
+//                        .fontWeight(.medium)
+//                }
             }
         }
     }

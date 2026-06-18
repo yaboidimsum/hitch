@@ -6,6 +6,7 @@ import SwiftUI
 final class AppStore {
     var currentUser: User
     var friends: [User]
+    var contactService: ContactService
     var recentPlaces: [Place]
     var rides: [Ride]
     var weather: WeatherData
@@ -15,6 +16,7 @@ final class AppStore {
         currentUser: User,
         friends: [User] = [],
         recentPlaces: [Place] = [],
+        contactService: ContactService? = nil,
         rides: [Ride] = [],
         weather: WeatherData = WeatherData(
             iconName: "sun.max.fill",
@@ -26,6 +28,7 @@ final class AppStore {
         self.currentUser = currentUser
         self.friends = friends
         self.recentPlaces = recentPlaces
+        self.contactService = contactService ?? ContactService()
         self.rides = rides
         self.weather = weather
         self.locationService = locationService ?? LocationService()
@@ -51,18 +54,46 @@ extension AppStore {
     static func mock() -> AppStore {
         let currentUser = User(
             name: "Dimas",
-            avatarURL: "https://api.dicebear.com/10.x/lorelei/png?seed=Dimas"
+            avatarURL: "https://api.dicebear.com/10.x/lorelei/png?seed=Dimas",
+            phoneNumber: "0812345678"
+            
         )
         
         let friends = [
-            User(name: "Kanye West", avatarURL: "https://api.dicebear.com/10.x/lorelei/png?seed=Kanye", isAvailable: true),
-            User(name: "John Doe", avatarURL: "https://api.dicebear.com/10.x/lorelei/png?seed=John", isAvailable: true),
-            User(name: "Jane Smith", avatarURL: "https://api.dicebear.com/10.x/lorelei/png?seed=Jane", isAvailable: true),
-            User(name: "Mike Smith", avatarURL: "https://api.dicebear.com/10.x/lorelei/png?seed=Mike", isAvailable: true),
-            User(name: "Sarah Lee", avatarURL: "https://api.dicebear.com/10.x/lorelei/png?seed=Sarah", isAvailable: true),
-            User(name: "Tom Brown", avatarURL: "https://api.dicebear.com/10.x/lorelei/png?seed=Tom", isAvailable: true),
-            User(name: "Emily Davis", avatarURL: "https://api.dicebear.com/10.x/lorelei/png?seed=Emily", isAvailable: true),
-            User(name: "Nadya", avatarURL: "https://api.dicebear.com/10.x/lorelei/png?seed=Nadya", isAvailable: true)
+            User(name: "Kanye West",
+                 avatarURL: "https://api.dicebear.com/10.x/lorelei/png?seed=Kanye",
+                 phoneNumber: "0812345678",
+                 isAvailable: true),
+            User(
+                name: "John Doe",
+                avatarURL: "https://api.dicebear.com/10.x/lorelei/png?seed=John",
+                phoneNumber: "0812345678",
+                isAvailable: true,
+            ),
+            User(name: "Jane Smith",
+                 avatarURL: "https://api.dicebear.com/10.x/lorelei/png?seed=Jane",
+                 phoneNumber: "0812345678",
+                 isAvailable: true),
+            User(name: "Mike Smith",
+                 avatarURL: "https://api.dicebear.com/10.x/lorelei/png?seed=Mike",
+                 phoneNumber: "0812345678",
+                 isAvailable: true),
+            User(name: "Sarah Lee",
+                 avatarURL: "https://api.dicebear.com/10.x/lorelei/png?seed=Sarah",
+                 phoneNumber: "0812345678",
+                 isAvailable: true),
+            User(name: "Tom Brown",
+                 avatarURL: "https://api.dicebear.com/10.x/lorelei/png?seed=Tom",
+                 phoneNumber: "0812345678",
+                 isAvailable: true),
+            User(name: "Emily Davis",
+                 avatarURL: "https://api.dicebear.com/10.x/lorelei/png?seed=Emily",
+                 phoneNumber: "0812345678",
+                 isAvailable: true),
+            User(name: "Nadya",
+                 avatarURL: "https://api.dicebear.com/10.x/lorelei/png?seed=Nadya",
+                 phoneNumber: "0812345678",
+                 isAvailable: true)
         ]
         
         let places = [

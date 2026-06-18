@@ -59,31 +59,31 @@ struct ContentView: View {
                 WeatherActivity()
                     .padding(.top, -52)
                     .padding(.leading, 16)
-                DriverButton {
-                    withAnimation {
-                        sheetContent = sheetContent == .hitch ? .request : .hitch
-                    }
-                }
-                .padding(.top, 80)
-                .padding(.leading, 342)
+//                DriverButton {
+//                    withAnimation {
+//                        sheetContent = sheetContent == .hitch ? .request : .hitch
+//                    }
+//                }
+//                .padding(.top, 80)
+//                .padding(.leading, 342)
 
             }
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     HStack {
-                        Button("notifications", systemImage: "bell", action: {
-                            path.append("notification")
-                        })
-                        Button("receipt", systemImage: "receipt", action: {
+//                        Button("notifications", systemImage: "bell", action: {
+//                            path.append("notification")
+//                        })
+//                        Button("receipt", systemImage: "receipt", action: {
+//                            path.append("history")
+//                        })
+                        Button("history", systemImage: "clock.arrow.trianglehead.counterclockwise.rotate.90", action: {
                             path.append("history")
                         })
-                        Button("history", systemImage: "clock.arrow.trianglehead.counterclockwise.rotate.90", action: {
-                            path.append("activity")
-                        })
-                        Button("debug", systemImage: "ladybug", action: {
-                            path.append("debugmap")
-                        })
-                        .foregroundStyle(.red)
+//                        Button("debug", systemImage: "ladybug", action: {
+//                            path.append("debugmap")
+//                        })
+//                        .foregroundStyle(.red)
                     }
                 }
             }
@@ -153,6 +153,10 @@ struct ContentView: View {
             }
             .onAppear {
                 store.locationService.startTracking()
+                
+                Task {
+                    await store.contactService.requestAccess()
+                }
             }
             .onChange(of: path.isEmpty) { _, isEmpty in
                 if isEmpty {
@@ -160,14 +164,13 @@ struct ContentView: View {
                 }
             }
             .onChange(of: userLocationKey) { _, _ in
-                Task {
-                    await model.reverseGeocode(store.locationService.userLocation)
-                }
+                model.reverseGeocode(store.locationService.userLocation)
             }
             .onChange(of: selectedDestination) { _, newPlace in
                 guard let place = newPlace else { return }
                 model.destinationName = place.name
                 Task {
+                    model.clearRoute()
                     if let coord = place.coordinate {
                         await model.calculateRouteFromUser(
                             using: store.locationService,

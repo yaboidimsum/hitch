@@ -13,16 +13,7 @@ struct HitchRequestProgressCard: View {
             Text("Go pick em!").fontWeight(.semibold)
             
             HStack(alignment: .center, spacing: 16) {
-                AsyncImage(url: URL(string: otherPerson.avatarURL)) { image in
-                    image
-                        .resizable()
-                        .scaledToFill()
-                } placeholder: {
-                    Circle()
-                        .fill(.gray.opacity(0.3))
-                }
-                .frame(width: 64, height: 64)
-                .clipShape(.circle)
+                UserAvatarView(user: otherPerson, size: 64)
                 
                 VStack(alignment: .leading, spacing: 4) {
                     Text("\(ride.isIncoming(for: currentUserID) ? "+" : "-")Rp\(ride.amount, format: .number)")

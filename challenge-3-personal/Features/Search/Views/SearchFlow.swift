@@ -24,7 +24,6 @@ struct SearchFlow: View {
                     }
                 },
                 onPlaceSelected: { place in
-                    model.routeDistance = routeDistance
                     onDestinationSelected?(place)
                     model.selectPlace(place)
                 },
@@ -54,7 +53,7 @@ struct SearchFlow: View {
                             model.sendRequest()
                         },
                         currentLocation: mapModel.currentLocationAddress,
-                        distance: model.routeDistance
+                        distance: routeDistance
                     ).navigationBarHidden(true)
                 case .sent(let place, let friend):
                     RequestSentSheet(
@@ -78,9 +77,7 @@ struct SearchFlow: View {
             store.locationService.stopTracking()
         }
         .onChange(of: userLocationKey) { _, _ in
-            Task {
-                await mapModel.reverseGeocode(store.locationService.userLocation)
-            }
+            mapModel.reverseGeocode(store.locationService.userLocation)
         }
     }
 }

@@ -5,16 +5,26 @@ struct FriendMeter: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 16) {
-            Text("Nearby Friends")
+            Text("Friends")
                 .font(.headline)
                 .foregroundStyle(.ink)
                 .fontWeight(.semibold)
-
-            HStack(spacing: 16) {
-                ForEach(store.friends.prefix(4)) { friend in
-                    FriendItem(friend: friend)
+            ScrollView(.horizontal) {
+                HStack(spacing: 16) {
+                    ForEach(store.contactService.contacts
+                        .filter{
+                        !($0.phoneNumber?.isEmpty ?? true)
+                    }
+                        .sorted { $0.name < $1.name }
+                    )
+                    { friend in
+                        FriendItem(friend: friend)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                    }
                 }
+                .padding(.vertical, 4)
             }
+            .scrollIndicators(.hidden)
         }
         .padding(.horizontal, 16)
     }

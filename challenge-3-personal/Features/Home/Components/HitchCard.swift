@@ -19,16 +19,7 @@ struct HitchCard: View {
     var body: some View {
         HStack(alignment: .top) {
             HStack(alignment: .center) {
-                AsyncImage(url: URL(string: otherPerson.avatarURL)) { image in
-                    image
-                        .resizable()
-                        .scaledToFill()
-                } placeholder: {
-                    Circle()
-                        .fill(.gray.opacity(0.3))
-                }
-                .frame(width: 64, height: 64)
-                .clipShape(.circle)
+                UserAvatarView(user: otherPerson, size: 64)
                 
                 VStack(alignment: .leading) {
                     VStack(alignment: .leading) {
