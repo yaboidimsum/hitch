@@ -10,6 +10,7 @@ struct ContentView: View {
     @State private var path = NavigationPath()
     @State private var sheetContent: SheetContent = .hitch
     @State private var selectedDestination: Place? = nil
+    @State private var hasInitialCentered = false
     
     private var showHitchSheetBinding: Binding<Bool> {
         Binding(
@@ -47,18 +48,10 @@ struct ContentView: View {
                     MapUserLocationButton()
                     MapCompass()
                 }
-                .onMapCameraChange { context in
-                    let center = context.region.center
-                    let maxDistance = 0.2 // degrees
-                    if abs(center.latitude - (-6.2088)) > maxDistance ||
-                        abs(center.longitude - 106.8456) > maxDistance {
-                        Task { model.snapToCity() }
-                    }
-                }
                 
-                WeatherActivity()
-                    .padding(.top, -52)
-                    .padding(.leading, 16)
+//                WeatherActivity()
+//                    .padding(.top, 20)
+//                    .padding(.leading, 16)
 //                DriverButton {
 //                    withAnimation {
 //                        sheetContent = sheetContent == .hitch ? .request : .hitch
@@ -68,36 +61,36 @@ struct ContentView: View {
 //                .padding(.leading, 342)
 
             }
-            .toolbar {
-                ToolbarItem(placement: .topBarTrailing) {
-                    HStack {
+//            .toolbar {
+//                ToolbarItem(placement: .topBarTrailing) {
+//                    HStack {
 //                        Button("notifications", systemImage: "bell", action: {
 //                            path.append("notification")
 //                        })
 //                        Button("receipt", systemImage: "receipt", action: {
 //                            path.append("history")
 //                        })
-                        Button("history", systemImage: "clock.arrow.trianglehead.counterclockwise.rotate.90", action: {
-                            path.append("history")
-                        })
+//                        Button("history", systemImage: "clock.arrow.trianglehead.counterclockwise.rotate.90", action: {
+//                            path.append("history")
+//                        })
 //                        Button("debug", systemImage: "ladybug", action: {
 //                            path.append("debugmap")
 //                        })
 //                        .foregroundStyle(.red)
-                    }
-                }
-            }
-            .navigationDestination(for: String.self) { value in
-                if value == "activity" {
-                    Activity()
-                } else if value == "notification" {
-                    Notification()
-                } else if value == "history" {
-                    History()
-                } else if value == "debugmap" {
-                    MapDebugView()
-                }
-            }
+//                    }
+//                }
+//            }
+//            .navigationDestination(for: String.self) { value in
+//                if value == "activity" {
+//                    Activity()
+//                } else if value == "notification" {
+//                    Notification()
+//                } else if value == "history" {
+//                    History()
+//                } else if value == "debugmap" {
+//                    MapDebugView()
+//                }
+//            }
             .sheet(isPresented: showHitchSheetBinding) {
                 switch sheetContent {
                 case .hitch:
@@ -110,7 +103,7 @@ struct ContentView: View {
                         }
                     )
                     .presentationDetents(
-                        [.fraction(0.10), .medium, .large],
+                        [.fraction(0.10),.fraction(0.40)],
                         selection: $selectedDetent
                     )
                     .interactiveDismissDisabled()
@@ -146,13 +139,32 @@ struct ContentView: View {
                             selectedDestination = nil
                         }
                     )
-                    .presentationDetents([.medium, .large])
+                    .presentationDetents([.fraction(0.40), .large])
                     .interactiveDismissDisabled()
                     .presentationBackgroundInteraction(.enabled)
                 }
             }
             .onAppear {
                 store.locationService.startTracking()
+                
+                if !hasInitialCentered {
+                    if let userLoc = store.locationService.userLocation {
+                        model.recenter(on: userLoc, animated: false)
+                        hasInitialCentered = true
+                    } else {
+                        hasInitialCentered = true
+                        Task { @MainActor in
+                            let deadline = ContinuousClock.now.advanced(by: .seconds(10))
+                            while ContinuousClock.now < deadline {
+                                if let loc = store.locationService.userLocation {
+                                    model.recenter(on: loc, animated: false)
+                                    return
+                                }
+                                try? await Task.sleep(for: .milliseconds(200))
+                            }
+                        }
+                    }
+                }
                 
                 Task {
                     await store.contactService.requestAccess()

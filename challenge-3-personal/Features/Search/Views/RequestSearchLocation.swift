@@ -6,6 +6,7 @@ struct RequestSearchLocation: View {
     let onPlaceSelected: (Place) -> Void
     let currentLocation: String?
     @State private var selectedPlace: Place?
+    @State private var cardID = UUID()
     
     var body: some View {
         VStack(alignment: .leading, spacing: 0) {
@@ -29,33 +30,46 @@ struct RequestSearchLocation: View {
             .padding(.top, 24)
             .padding(.bottom, 20)
             
-//            ScrollView {
+            ScrollView {
                 VStack(alignment: .leading, spacing: 12) {
                     DestinationCard(
-                        currentLocation: currentLocation,   // ← From MapModel
-                        selectedPlace: selectedPlace
-                    )
-                    MapButton()
-                }
-                .padding(.horizontal, 16).padding(.bottom,16)
-                
-//                Rectangle()
-//                    .fill(.mutedSlate.opacity(0.2))
-//                    .frame(height: 1)
-                
-                List(store.recentPlaces) { place in
-                    LocationCard(place: place)
-                        .frame(maxWidth: .infinity, alignment: .leading).contentShape(
-                            Rectangle()
-                        )
-                        .onTapGesture {
+                        currentLocation: currentLocation,
+                        selectedPlace: selectedPlace,
+                        isEditable: true,
+                        onPlaceSelected: { place in
                             selectedPlace = place
                             onPlaceSelected(place)
                         }
+                    )
+                    .id(cardID)
                     
+//                    if selectedPlace == nil {
+//                        VStack(alignment: .leading, spacing: 8) {
+//                            Text("Recent")
+//                                .font(.headline)
+//                                .foregroundStyle(.ink)
+//                                .padding(.horizontal, 16)
+//                            
+//                            ForEach(store.recentPlaces) { place in
+//                                Button {
+//                                    selectedPlace = place
+//                                    onPlaceSelected(place)
+//                                } label: {
+//                                    LocationCard(place: place)
+//                                        .frame(maxWidth: .infinity, alignment: .leading)
+//                                }
+//                                .buttonStyle(.plain)
+//                            }
+//                        }
+//                    }
                 }
-                .listStyle(.plain)
-//            }
+                .padding(.horizontal, 16)
+                .padding(.bottom, 16)
+            }
+        }
+        .onAppear {
+            selectedPlace = nil
+            cardID = UUID()
         }
     }
 }

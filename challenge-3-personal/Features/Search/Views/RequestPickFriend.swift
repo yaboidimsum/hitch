@@ -8,16 +8,21 @@ struct RequestPickFriend: View {
     let onBack: () -> Void
     let currentLocation: String?
     
+    @State private var searchModel = DestinationSearchModel()
+    
     var body: some View {
         VStack(spacing: 0) {
             HStack {
-                Button("Back", systemImage: "chevron.left", action: onBack)
-                    .labelStyle(.iconOnly)
-                    .font(.title3)
-                    .foregroundStyle(.ink)
-                    .frame(width: 44, height: 44)
-                    .clipShape(.circle)
-                    .glassEffect()
+                Button("Back", systemImage: "chevron.left") {
+                    onBack()
+                    searchModel.clear()
+                }
+                .labelStyle(.iconOnly)
+                .font(.title3)
+                .foregroundStyle(.ink)
+                .frame(width: 44, height: 44)
+                .clipShape(.circle)
+                .glassEffect()
                 
                 Spacer()
                 Text("Pick a friend")
@@ -34,7 +39,9 @@ struct RequestPickFriend: View {
                 VStack {
                     DestinationCard(
                         currentLocation: currentLocation,
-                        selectedPlace: selectedPlace
+                        selectedPlace: selectedPlace,
+                        isEditable: false,
+                        onPlaceSelected: { _ in }
                     )
                     .padding(.vertical, 12)
                     .padding(.horizontal, 16)
@@ -70,16 +77,20 @@ struct RequestPickFriend: View {
                     } else {
                         List(
                             store.contactService.contacts
-                                .filter{
+                                .filter {
                                     !($0.phoneNumber?.isEmpty ?? true)
                                 }
-                                .sorted { $0.name < $1.name }) { friend in
-                            FriendCard(friend: friend)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                                .contentShape(Rectangle())
-                                .onTapGesture {
-                                    onFriendSelected(friend)
-                                }
+                                .sorted { $0.name < $1.name }
+                        ) { friend in
+                            Button {
+                                onFriendSelected(friend)
+                            } label: {
+                                HStack{
+                                    FriendCard(friend: friend)
+                                        .frame(maxWidth: .infinity, alignment: .leading)
+                                }.contentShape(Rectangle())
+                            }
+                            .buttonStyle(.plain)
                         }
                         .listStyle(.plain)
                     }

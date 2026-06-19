@@ -4,8 +4,7 @@ import SwiftUI
 @MainActor
 @Observable
 final class MapModel {
-    private let cityCenter = CLLocationCoordinate2D(latitude: -6.2088, longitude: 106.8456)
-    private let citySpan = MKCoordinateSpan(latitudeDelta: 0.15, longitudeDelta: 0.15)
+    private static let defaultSpan = MKCoordinateSpan(latitudeDelta: 120, longitudeDelta: 240)
     
     var position: MapCameraPosition
     var userLocation: CLLocationCoordinate2D?
@@ -22,23 +21,25 @@ final class MapModel {
     private let geocoder = CLGeocoder()
     private var currentGeocodeTask: Task<Void, Never>?
     
-    init() {
-        position = .region(
-            MKCoordinateRegion(
-                center: cityCenter,
-                span: citySpan
-            )
-        )
+    init(initialLocation: CLLocationCoordinate2D? = nil) {
+        let center = initialLocation ?? CLLocationCoordinate2D(latitude: 0, longitude: 0)
+        let span: MKCoordinateSpan
+        if initialLocation != nil {
+            span = MKCoordinateSpan(latitudeDelta: 0.15, longitudeDelta: 0.15)
+        } else {
+            span = Self.defaultSpan
+        }
+        position = .region(MKCoordinateRegion(center: center, span: span))
     }
     
-    func snapToCity() {
-        withAnimation(.smooth(duration: 0.5)) {
-            position = .region(
-                MKCoordinateRegion(
-                    center: cityCenter,
-                    span: citySpan
-                )
-            )
+    func recenter(on coordinate: CLLocationCoordinate2D, animated: Bool = true) {
+        let region = MKCoordinateRegion(center: coordinate, span: MKCoordinateSpan(latitudeDelta: 0.15, longitudeDelta: 0.15))
+        if animated {
+            withAnimation(.smooth(duration: 0.5)) {
+                position = .region(region)
+            }
+        } else {
+            position = .region(region)
         }
     }
     

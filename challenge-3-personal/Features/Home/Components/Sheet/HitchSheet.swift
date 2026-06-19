@@ -19,7 +19,7 @@ struct HitchSheet: View {
             ScrollView {
                 VStack(spacing: 32) {
                     FriendMeter()
-                    RecentCard()
+//                    RecentCard()
                 }
             }
         }
